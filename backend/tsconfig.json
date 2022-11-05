@@ -26,6 +26,8 @@
 
     /* Modules */
     "module": "commonjs",                                /* Specify what module code is generated. */
+    "outDir": "./dist",                                  /* Redirect output structure to the directory. */
+    "rootDir": "./src",                                  /* Specify the root directory of input files. Use to 
     // "rootDir": "./",                                  /* Specify the root folder within your source files. */
     // "moduleResolution": "node",                       /* Specify how TypeScript looks up a file from a given module specifier. */
     // "baseUrl": "./",                                  /* Specify the base directory to resolve non-relative module names. */
