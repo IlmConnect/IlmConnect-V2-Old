@@ -1,7 +1,10 @@
 import express, { Express, Request, Response } from 'express';
+import { PrismaClient } from '@prisma/client';
 
 const app: Express = express();
-const port = 8000;
+const prisma = new PrismaClient()
+
+const port: number = 8000;
 
 app.get('/', (req: Request, res: Response) => {
 	res.send('Express + TypeScript Server');
