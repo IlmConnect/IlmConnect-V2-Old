@@ -1,3 +1,3 @@
 export interface Config {
-	urls: string[]
+	urls: RegExp[]
 }

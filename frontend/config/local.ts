@@ -1,7 +1,7 @@
 import { Config } from "./types"
 
 const config: Config = {
-	urls: ['http://localhost:3000'],
+	urls: [/localhost:\d+/],
 }
 
 export default config
