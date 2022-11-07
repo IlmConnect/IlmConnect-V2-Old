@@ -8,6 +8,14 @@ There are three main components to Prisma
 
 The prisma schema is the main configuration file for setting up our setup. In here we define how our db tables look like and what they contain. For reference see 'model User' in schema.prisma file.
 
+## Importing ENV vars
+
+To use any of the prisma commands, we need to import the environment variables so Prisma can connect to the DB. Use the following command:
+
+```
+source .env
+```
+
 ## Prisma migrate
 
 Prisma migrate allows us to migrate our schema we added/modified in schema.prisma. You can do this with a simple command:
