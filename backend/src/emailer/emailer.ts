@@ -1,47 +1,38 @@
-/* Emailer interface functionality for IlmConnect
-*/
+var postmark = require("postmark");
+var client = new postmark.Client(process.env.POSTMARK_API_KEY);
 
-import PostMarkEmailer  from "./emailer_postmark";
+/* TODO: Data structure for template aliases to account for potential name changes */
 
-enum EmailerServiceType {
-    PostMark = 1,
-    SendGrid,
-    Undefined 
+export default class Emailer {
+
+  constructor() {
+  
+  }
+  
+  /* Test names until functionality for retrieving actual user data is in place */
+  // -------------------------------------------------------------------------- //
+  static getName(email: string) : string {
+    return "Blah"
+  }
+
+  static getUsername(email: string) : string {
+    return "blahblah"
+  }
+  // -------------------------------------------------------------------------- //
+
+  static sendWelcome(email: string):void{
+    client.sendEmailWithTemplate({
+      "From": "noreply@ilmconnect.com", 
+      "TemplateAlias": "welcome",
+      "To": email, 
+      "TemplateModel": {
+          "name" : this.getName(email),
+          "username" : this.getUsername(email)
+      }
+  });
+  }
+
+ //sendPasswordReset(email: string):void{}
+ //sendUserInvitation():void{}
+
 }
-
-export class Emailer {
-    /* TODO: 
-            1) Maybe better mechanism for setting default emailer 3rd library type 
-            maybe load from which library we want to use from a config file
-            2) Exception handling lol
-     */
-
-    // Default to PostMark
-    static emailerService: number = EmailerServiceType.PostMark;
-
-    static setEmailerType(type: number): void {
-        this.emailerService = type
-    }
-
-    static sendWelcome(email: string): void {
-        if(this.emailerService == EmailerServiceType.PostMark){
-            PostMarkEmailer.sendWelcome(email);
-        } else{
-            /* We don't support any other emailer libraries, do exception stuff */
-            console.log("Unsupported emailer service!")
-        }
-    }
-    
-    //static sendPasswordReset(email: string): void;
-    //static sendUserInvitation(): void;
-
-}
-
-
-
-
-
-
-
-
-
