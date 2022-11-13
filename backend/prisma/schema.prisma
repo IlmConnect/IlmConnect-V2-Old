@@ -11,11 +11,33 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  email     String   @unique
-  role      Role     @default(ADMIN)
+  id        String          @id @default(uuid())
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+  email     String          @unique
+  firstName String
+  lastName  String
+  role      Role            @default(ADMIN)
+  courses   CourseMembers[]
+}
+
+model Course {
+  id          Int             @id @default(autoincrement())
+  title       String
+  description String
+  members     CourseMembers[]
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+}
+
+model CourseMembers {
+  role     Role
+  courseId Int
+  userId   String
+  user     User   @relation(fields: [userId], references: [id])
+  course   Course @relation(fields: [courseId], references: [id])
+
+  @@id([userId, courseId, role])
 }
 
 enum Role {
