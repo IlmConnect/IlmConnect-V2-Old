@@ -6,7 +6,7 @@ const config: Config = {
 	},
 	postmark: {
 		apiKey: process.env.POSTMARK_API_KEY || "",
-	}
+	},
 }
 
 export default config
