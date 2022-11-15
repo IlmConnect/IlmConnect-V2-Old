@@ -49,7 +49,6 @@ const initCourseRoutes = (app:any, prisma:any) => {
 					members: true
 				}
 			});
-			console.log(course.members)
 			res.json(course);
 		}
 		catch(err:any){
