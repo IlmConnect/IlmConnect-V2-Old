@@ -11,8 +11,8 @@ const Container = styled.div`
 `
 
 const CreateCourse = () => {
-  const [courseName, setCourseName] = useState<String>('');
-  const [courseDescription, setCourseDescription] = useState<String>('');
+  const [courseName, setCourseName] = useState<string>('');
+  const [courseDescription, setCourseDescription] = useState<string>('');
 
   const submitCourseDetails = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
