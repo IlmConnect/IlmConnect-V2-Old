@@ -7,6 +7,12 @@ const config: Config = {
 	postmark: {
 		apiKey: process.env.POSTMARK_API_KEY || "",
 	},
+	auth: {
+		jwt: {
+			key: "123456789",
+			expiration: "7d"
+		} 
+	}
 }
 
 export default config

@@ -5,4 +5,10 @@ export interface Config {
 	postmark: {
 		apiKey: string
 	}
+	auth: {
+		jwt: {
+			key: string
+			expiration: string
+		} 
+	}
 }
