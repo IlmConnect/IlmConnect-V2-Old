@@ -1,0 +1,15 @@
+{
+    "prefix": "", 
+    "endpoints": [
+            ["GET", "test/route/get"],  
+            ["POST", "test/route/post"]
+    ],
+    
+    "permissions": [
+            "",
+            "user:id",
+            "user:read",
+            "user:write",
+            "user:delete"
+    ]
+}
