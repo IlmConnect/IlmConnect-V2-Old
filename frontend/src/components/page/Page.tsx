@@ -1,11 +1,13 @@
-import { Box } from "@mui/material";
-import NavBar from "../navBar/NavBar";
+import BaseCard from "../BaseCard/BaseCard";
+import NavBar from "../UI/NavBar/NavBar";
+import Card from '../UI/Card/Card';
 
-const allPages = ["tab1", "tab2", "tab3"];
+const allPages = ["tab1", "tab2", "tab3"]
+const randomCard1 = {header: 'header1', body: 'somebody1', buttons: ['button1','button2']}
 
-export default function Home(props) {
+export default function Page(props) {
   return (
-    <Box sx={{ border: "1px solid", height: "100vh", width: "100vh" }}>
+    <Card styles={{ border: "1px solid", height: "90vh", width: "90vw", justifyContent: 'center', alignContent: 'center', background: '#eaecee' }}>
       <h1>{props.pageName}</h1>
       <div>
         <NavBar
@@ -19,10 +21,13 @@ export default function Home(props) {
         ></NavBar>
       </div>
       <div>
-        <Box sx={{ border: "1px solid" }}>
+        <Card styles={{ border: "1px solid" }}>
           <h2>Some text</h2>
-        </Box>
+        </Card>
       </div>
-    </Box>
+      <div>
+        <BaseCard {...randomCard1}></BaseCard>
+      </div>
+    </Card>
   );
 }
