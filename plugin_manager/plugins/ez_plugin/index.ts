@@ -1,13 +1,11 @@
-import { Request, Response, NextFunction } from 'express';
-import axios, { AxiosResponse } from 'axios';
-
-//TODO: Add some routes for this test plugin
+import { Request, Response } from "express";
 import PluginTemplate from "../template";
 
-export default class RoutePlugin extends PluginTemplate {
-    name = "Route_Plugin";
+// First test plugin, simple load and reload actions
+export default class EzPlugin extends PluginTemplate {
+    name = "EZ_Plugin";
     version = "1.0";
-   
+    
     async load(): Promise<void> {
         console.log("Loaded Plugin: " + this.name + "\nVersion: " + this.version);
     }

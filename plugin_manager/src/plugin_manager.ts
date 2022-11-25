@@ -1,22 +1,22 @@
-import { countReset } from 'console';
 import * as fs from 'fs';
 import * as path from 'path';
-import PluginManifest from './plugins/manifest';
-import PluginTemplate from "./plugins/template";
+import PluginManifest from '../plugins/manifest';
+import PluginTemplate from "../plugins/template";
 
 /* Plugin wrapper object. Can be used for holding more relevant data to our manager
 for enabling/disabling plugins, handling permissions and more in the future. 
 Can be refactored though.. */ 
 
 export class PluginObject {
-    core : PluginTemplate;      // Where plugin actually sits. NOTE: Plugin name and version sits here too...
+    core : any;      // Where plugin actually sits. NOTE: Plugin name and version sits here too...
     isEnabled : boolean;        // Not used now but maybe later? 
     path: string;               
     endpoints : string[][];
     permissions?: any;
 
     // Default the plugin to be enabled
-    constructor(plugin: PluginTemplate, manifest: PluginManifest){
+    // TODO: Enforce plugin type to be of some soft of plugintemplate/interface
+    constructor(plugin: any, manifest: PluginManifest){
         this.core = plugin;
         this.isEnabled = true; 
         this.endpoints = manifest.endpoints;
@@ -40,10 +40,7 @@ export default class PluginManager {
         if(!this.isValidPlugin(plugin)){
             throw new Error("Invalid plugin.");
         } 
-        if(!this.pluginExists(plugin)){
-            this.plugins.push(plugin);
-        }
-        
+        this.plugins.push(plugin);
         await plugin.core.load(); 
     }
     async unloadPlugin(plugin: PluginObject){
@@ -83,10 +80,10 @@ export default class PluginManager {
 
     pluginExists(plugin: PluginObject) : boolean{
         //TODO: Logic to check if plugin is in list...
-        return true;
+        return false;
     }
 
-    getAllPlugins(): PluginObject [] {
+    async getAllPlugins(): Promise<PluginObject[]> {
         return this.plugins;
     }
 
@@ -112,5 +109,6 @@ export default class PluginManager {
         //console.log(pluginPaths);
         return pluginPaths;
       }
+
 }
 
