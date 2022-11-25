@@ -7,4 +7,5 @@ export default abstract class PluginTemplate{
     
     abstract load(): Promise<void>;
     abstract unload(): Promise<void>; 
+
 }
