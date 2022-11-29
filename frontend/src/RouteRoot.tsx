@@ -3,6 +3,7 @@ import Page from './components/page/Page'
 import DrawerLayout from './layouts/Drawer';
 import CreateCourse from './routes/createCourse';
 import SignUpView from './views/SignUp';
+import LogInView from './views/LogIn';
 
 export default function RouteRoot() {
     return (
@@ -11,6 +12,10 @@ export default function RouteRoot() {
                 <Route 
                     path='/signup' 
                     element={<SignUpView />}
+                />
+                <Route 
+                    path='/login' 
+                    element={<LogInView />}
                 />
 
                 <Route 

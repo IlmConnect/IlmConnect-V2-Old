@@ -1,3 +1,4 @@
 import localConfig from './local'
 
-export default localConfig
+const config = localConfig
+export default config
