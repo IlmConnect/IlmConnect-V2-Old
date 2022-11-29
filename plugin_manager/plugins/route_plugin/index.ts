@@ -1,26 +1,22 @@
-import { Request, Response, NextFunction } from 'express';
-import axios, { AxiosResponse } from 'axios';
-
-//TODO: Add some routes for this test plugin
+import { Request, Response } from "express";
 import PluginTemplate from "../template";
 
-export default class RoutePlugin extends PluginTemplate {
-    name = "Route_Plugin";
-    version = "1.0";
-   
-    async load(): Promise<void> {
-        console.log("Loaded Plugin: " + this.name + "\nVersion: " + this.version);
-    }
 
-    async unload(): Promise<void> {
+const RoutePlugin: PluginTemplate = {
+    async load(): Promise<void>{
+        console.log("Loaded Route Plugin")
+    },
+
+    async unload(): Promise<void>{
         console.log("Unloaded " + this.name);
-    }
+    },
 
     async 'test/route/get'(req: Request, res: Response){
-        res.send("Get route test from " + this.name);
-    } 
+        res.send("Get route test from RoutePlugin")
+    },
 
     async 'test/route/post'(req: Request, res: Response){
-        console.log("Post route test from " + this.name);
-    }
-}
+        console.log("Post route test from RoutePlugin");
+    }     
+} 
+export default RoutePlugin;

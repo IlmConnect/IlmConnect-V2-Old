@@ -1,10 +1,13 @@
 {
+    "plugin-name" : "Route-Plugin",
+    "version": "1.1.0",
+    "author-name": "nmosman",
     "prefix": "", 
     "endpoints": [
             ["GET", "test/route/get"],  
-            ["POST", "test/route/post"]
+            ["POST", "test/route/post"],
+            ["GET", "test/route/get2"]
     ],
-    
     "permissions": [
             "",
             "user:id",

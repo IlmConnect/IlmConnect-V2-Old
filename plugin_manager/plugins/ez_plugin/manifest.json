@@ -1,4 +1,7 @@
 {
+    "plugin_name" : "Ez-Plugin",
+    "version": "0.2.1",
+    "author_name": "nmosman",
     "prefix": "", 
     "endpoints": [
             ["GET", "test/route/get"],  
