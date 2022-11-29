@@ -9,12 +9,14 @@ export default function RouteRoot() {
         <div>
             <Routes>
                 <Route 
+                    path='/signup' 
+                    element={<SignUpView />}
+                />
+
+                <Route 
                     element={<DrawerLayout />}
                 >
-                    <Route 
-                        path='/signup' 
-                        element={<SignUpView />}
-                    />
+                    
                 </Route>
 
                 <Route path='/tab1' element = {<Page pageName='tab1'></Page>}/>
