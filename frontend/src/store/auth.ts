@@ -7,6 +7,11 @@ class AuthStore {
 	constructor() {
 		makeAutoObservable(this)
 	}
+
+	setUser(user: object, token: string) {
+		this.user = user
+		this.token = token
+	}
 }
 
 const authStore = new AuthStore()
