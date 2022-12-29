@@ -1,9 +1,6 @@
 import React from 'react'
 import { useState } from 'react'
-import styled from 'styled-components'
-
-//npm install @mui/material @mui/styled-engine-sc styled-components
-//npm i -D @types/styled-components 
+import styled from '@emotion/styled'
 
 const Container = styled.div`
   width: 800px;
