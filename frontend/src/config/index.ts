@@ -1,4 +1,4 @@
-import localConfig from './local'
+import localConfig from './local';
 
-const config = localConfig
-export default config
+const config = localConfig;
+export default config;
