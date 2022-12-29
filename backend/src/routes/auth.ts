@@ -38,7 +38,7 @@ export default (app: Express, prisma: PrismaClient) => {
 			email: z.string().email(),
 			password: z.string().min(8).regex(
 				/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])/,
-				{ message: 'Password must contain one uppercase letter, one lowercase letter, and one special character(#?!@$%^&*-).' }
+				{ message: 'Password must contain one uppercase letter, one lowercase letter, and one special character(#?!@$%^&*-)' }
 			),
 		}),
 		output: z.object({
