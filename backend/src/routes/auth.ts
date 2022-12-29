@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction, Express } from 'express';
+import { Request, Response, Express } from 'express';
 import config from 'config';
 import jwt from 'jsonwebtoken';
 import bcrypt, { hash } from 'bcrypt';
