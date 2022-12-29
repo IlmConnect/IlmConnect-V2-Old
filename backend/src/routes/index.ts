@@ -1,9 +1,11 @@
-import { Routing } from 'express-zod-api'
+import authRoutes from './auth'
+import { Express } from 'express';
+import { PrismaClient } from '@prisma/client';
 
-const routing: Routing = {
-	v1: {
-		
+export default (app: Express, prisma: PrismaClient) => {
+	return {
+		v1: {
+			...authRoutes(app, prisma)
+		}
 	}
 }
-
-export default routing
