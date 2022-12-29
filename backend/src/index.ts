@@ -15,7 +15,7 @@ const config = createConfig({
 	server: {
 		listen: 8000,
 	},
-	cors: false,
+	cors: true,
 	logger: {
 		level: 'debug',
 		color: true,
