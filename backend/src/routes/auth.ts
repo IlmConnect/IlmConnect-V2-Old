@@ -3,6 +3,8 @@ import config from 'config';
 import jwt from 'jsonwebtoken';
 import bcrypt, { hash } from 'bcrypt';
 import { Prisma, PrismaClient, User } from '@prisma/client';
+import { defaultEndpointsFactory, Routing } from "express-zod-api";
+import { z } from 'zod'
 
 export default (app: Express, prisma: PrismaClient) => {
 	function createUserJWT(user: User): string {
@@ -21,9 +23,22 @@ export default (app: Express, prisma: PrismaClient) => {
 		}
 	}
 
+	interface LoginInput {
+		email: string
+		password: string
+	}
+
 	// user logs in
-	app.post('/login', async (req: Request, res: Response) => {
-		const { email, password } = req.body;
+	app.post(
+		'/login', 
+		validateInput(
+
+		),
+		async (
+			req: Request<LoginInput>, 
+			res: Response
+		) => {
+		const { email } = req.body;
 
 		const user = await getUser(email);
 
