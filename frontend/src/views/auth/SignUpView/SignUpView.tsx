@@ -1,24 +1,25 @@
-import { Button, CircularProgress, styled, TextField, Typography, Unstable_Grid2 } from '@mui/material';
+import { Button, CircularProgress, Grid, styled, TextField, Typography, Unstable_Grid2 } from '@mui/material';
 import axios from 'axios';
 import { observer } from 'mobx-react-lite';
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import config from 'config';
 import authStore from 'store/auth';
-import { FullScreenGrid } from './SignUp';
+import FullScreenGrid from '../components/FullScreenGrid/FullScreenGrid';
 
 
-function LogInView() {
+
+function SignUpView() {
 	const navigate = useNavigate();
 	const [loading, setLoading] = useState(false);
 	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
 	const [error, setError] = useState(false);
 
-	const logIn = async () => {
+	const signUp = async () => {
 		try {
 			setLoading(true);
-			const res = await axios.post(config.backend.url + 'login', { email, password });
+			const res = await axios.post(config.backend.url + 'signup', { email, password });
 			authStore.setUser(res.data?.user, res.data?.token);
 			navigate('/');
 		}
@@ -38,7 +39,7 @@ function LogInView() {
 			<Typography
 				variant="h4"
 			>
-				Log In
+				Sign Up
 			</Typography>
 
 			<TextField 
@@ -59,7 +60,7 @@ function LogInView() {
 
 			<Button
 				variant="contained"
-				onClick={logIn}
+				onClick={signUp}
 				disabled={loading}
 			>
 				{ loading? 
@@ -80,4 +81,4 @@ function LogInView() {
 		</FullScreenGrid>
 	);
 }
-export default observer(LogInView);
+export default observer(SignUpView);
