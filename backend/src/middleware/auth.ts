@@ -7,6 +7,7 @@ interface RequestWithUser extends Request {
   user: User | undefined;
 }
 
+// authentication middleware
 const verifyToken = (
   req: RequestWithUser,
   res: Response,
