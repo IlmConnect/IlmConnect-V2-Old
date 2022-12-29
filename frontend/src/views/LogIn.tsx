@@ -1,34 +1,34 @@
-import { Button, CircularProgress, styled, TextField, Typography, Unstable_Grid2 } from "@mui/material"
-import axios from "axios"
-import { observer } from "mobx-react-lite"
-import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import config from "config"
-import authStore from "store/auth"
-import { FullScreenGrid } from "./SignUp"
+import { Button, CircularProgress, styled, TextField, Typography, Unstable_Grid2 } from '@mui/material';
+import axios from 'axios';
+import { observer } from 'mobx-react-lite';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import config from 'config';
+import authStore from 'store/auth';
+import { FullScreenGrid } from './SignUp';
 
 
 function LogInView() {
-	const navigate = useNavigate()
-	const [loading, setLoading] = useState(false)
-	const [email, setEmail] = useState("")
-	const [password, setPassword] = useState("")
-	const [error, setError] = useState(false)
+	const navigate = useNavigate();
+	const [loading, setLoading] = useState(false);
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
+	const [error, setError] = useState(false);
 
 	const logIn = async () => {
 		try {
-			setLoading(true)
-			const res = await axios.post(config.backend.url + 'login', { email, password })
-			authStore.setUser(res.data?.user, res.data?.token)
-			navigate('/')
+			setLoading(true);
+			const res = await axios.post(config.backend.url + 'login', { email, password });
+			authStore.setUser(res.data?.user, res.data?.token);
+			navigate('/');
 		}
 		catch (e) {
-			setError(true)
+			setError(true);
 		}
 		finally {
-			setLoading(false)
+			setLoading(false);
 		}		
-	}
+	};
 
 	return (
 		<FullScreenGrid
@@ -67,7 +67,7 @@ function LogInView() {
 						color="inherit"
 						size={24}
 					/>: 
-					"Sign Up" 
+					'Sign Up' 
 				}
 			</Button>
 
@@ -78,6 +78,6 @@ function LogInView() {
 				</Link>
 			</Typography>
 		</FullScreenGrid>
-	)
+	);
 }
-export default observer(LogInView)
+export default observer(LogInView);

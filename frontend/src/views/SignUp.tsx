@@ -1,10 +1,10 @@
-import { Button, CircularProgress, Grid, styled, TextField, Typography, Unstable_Grid2 } from "@mui/material"
-import axios from "axios"
-import { observer } from "mobx-react-lite"
-import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
-import config from "config"
-import authStore from "store/auth"
+import { Button, CircularProgress, Grid, styled, TextField, Typography, Unstable_Grid2 } from '@mui/material';
+import axios from 'axios';
+import { observer } from 'mobx-react-lite';
+import { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import config from 'config';
+import authStore from 'store/auth';
 
 export const FullScreenGrid = styled(Unstable_Grid2)`
 	width: 600px;
@@ -13,29 +13,29 @@ export const FullScreenGrid = styled(Unstable_Grid2)`
 
 	flex-direction: column;
 	justify-content: center;
-`
+`;
 
 function SignUpView() {
-	const navigate = useNavigate()
-	const [loading, setLoading] = useState(false)
-	const [email, setEmail] = useState("")
-	const [password, setPassword] = useState("")
-	const [error, setError] = useState(false)
+	const navigate = useNavigate();
+	const [loading, setLoading] = useState(false);
+	const [email, setEmail] = useState('');
+	const [password, setPassword] = useState('');
+	const [error, setError] = useState(false);
 
 	const signUp = async () => {
 		try {
-			setLoading(true)
-			const res = await axios.post(config.backend.url + 'signup', { email, password })
-			authStore.setUser(res.data?.user, res.data?.token)
-			navigate('/')
+			setLoading(true);
+			const res = await axios.post(config.backend.url + 'signup', { email, password });
+			authStore.setUser(res.data?.user, res.data?.token);
+			navigate('/');
 		}
 		catch (e) {
-			setError(true)
+			setError(true);
 		}
 		finally {
-			setLoading(false)
+			setLoading(false);
 		}		
-	}
+	};
 
 	return (
 		<FullScreenGrid
@@ -74,7 +74,7 @@ function SignUpView() {
 						color="inherit"
 						size={24}
 					/>: 
-					"Sign Up" 
+					'Sign Up' 
 				}
 			</Button>
 
@@ -85,6 +85,6 @@ function SignUpView() {
 				</Link>
 			</Typography>
 		</FullScreenGrid>
-	)
+	);
 }
-export default observer(SignUpView)
+export default observer(SignUpView);
