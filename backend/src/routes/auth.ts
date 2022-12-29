@@ -36,7 +36,10 @@ export default (app: Express, prisma: PrismaClient) => {
 		method: "post",
 		input: z.object({
 			email: z.string().email(),
-			password: z.string().min(8).regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^\w\s])/),
+			password: z.string().min(8).regex(
+				/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])/,
+				{ message: 'Password must contain one uppercase letter, one lowercase letter, and one special character(#?!@$%^&*-).' }
+			),
 		}),
 		output: z.object({
 			user: UserModel,
@@ -48,13 +51,19 @@ export default (app: Express, prisma: PrismaClient) => {
 				password,
 			}
 		}) => {
+			const existingUser = await getUser(prisma, email);
+
+			if (existingUser) {
+				throw createHttpError(400, 'This user already exists')
+			}
+
 			const newUser: Prisma.UserCreateInput = {
 				firstName: '',
 				lastName: '',
 				email,
 				password: await hash(password, 12),
 			};
-
+			
 			const user = await prisma.user.create({ data: newUser });
 
 			const token = createUserJWT(user);
