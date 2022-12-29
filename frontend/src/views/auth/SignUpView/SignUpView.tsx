@@ -17,9 +17,7 @@ function SignUpView() {
 	const { register, formState: { errors }, handleSubmit } = useForm<FormData>()
 	const navigate = useNavigate()
 	const [loading, setLoading] = useState(false)
-	const [email, setEmail] = useState('')
-	const [password, setPassword] = useState('')
-	console.log(errors)
+	
 	const signUp = async (data: FormData) => {
 		
 		try {
@@ -29,7 +27,7 @@ function SignUpView() {
 			navigate('/');
 		}
 		catch (e) {
-			alert('There was an error singing you up. Please try again later' + e)
+			alert('There was an error singing you up. Please try again later')
 		}
 		finally {
 			setLoading(false);

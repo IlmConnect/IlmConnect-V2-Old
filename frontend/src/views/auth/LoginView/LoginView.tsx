@@ -6,27 +6,30 @@ import { Link, useNavigate } from 'react-router-dom';
 import config from 'config';
 import authStore from 'store/auth';
 import FullScreenGrid from '../components/FullScreenGrid/FullScreenGrid';
+import { useForm } from "react-hook-form"
 
+interface FormData {
+	email: string
+	password: string
+}
 
 function LogInView() {
-	const navigate = useNavigate();
-	const [loading, setLoading] = useState(false);
-	const [email, setEmail] = useState('');
-	const [password, setPassword] = useState('');
-	const [error, setError] = useState(false);
+	const { register, formState: { errors }, handleSubmit } = useForm<FormData>()
+	const navigate = useNavigate()
+	const [loading, setLoading] = useState(false)
 
-	const logIn = async () => {
+	const logIn = async (data: FormData) => {
 		try {
 			setLoading(true);
-			const res = await axios.post(config.backend.url + 'login', { email, password });
-			authStore.setUser(res.data?.user, res.data?.token);
+			const res = await axios.post(config.backend.url + 'login', data)
+			authStore.setUser(res.data?.user, res.data?.token)
 			navigate('/');
 		}
 		catch (e) {
-			setError(true);
+			alert('There was an error singing you up. Please try again later')
 		}
 		finally {
-			setLoading(false);
+			setLoading(false)
 		}		
 	};
 
@@ -44,22 +47,40 @@ function LogInView() {
 			<TextField 
 				id="email"
 				label="Email"
-				value={email}
-				onChange={e => setEmail(e.target.value)}
+				{...register(
+					'email',
+					{
+						required: {
+							value: true,
+							message: 'Email is required'
+						}
+					}
+				)}
+				error={!!errors.email}
+				helperText={errors.email?.message}
 				disabled={loading}
 			/>
 			<TextField 
 				id="password"
 				label="Password"
 				type="password"
-				value={password}
-				onChange={e => setPassword(e.target.value)}
+				{...register(
+					'password',
+					{
+						required: {
+							value: true,
+							message: 'Password is required'
+						}
+					}
+				)}
+				error={!!errors.password}
+				helperText={errors.password?.message}
 				disabled={loading}
 			/>
 
 			<Button
 				variant="contained"
-				onClick={logIn}
+				onClick={handleSubmit(logIn)}
 				disabled={loading}
 			>
 				{ loading? 
