@@ -2,8 +2,8 @@ import { Route, Routes, Navigate } from 'react-router-dom';
 import Page from './components/page/Page';
 import DrawerLayout from './layouts/Drawer';
 import CreateCourse from './routes/createCourse';
-import SignUpView from './views/SignUp';
-import LogInView from './views/LogIn';
+import SignUpView from './views/auth/SignUpView/SignUpView';
+import LogInView from './views/auth/LoginView/LoginView';
 
 export default function RouteRoot() {
 	return (
