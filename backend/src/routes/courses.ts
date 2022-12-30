@@ -1,5 +1,5 @@
 import { PrismaClient } from '@prisma/client';
-import express, { Express, Request, Response } from 'express';
+import { Request, Response } from 'express';
 import { createHttpError, defaultEndpointsFactory, DependsOnMethod } from 'express-zod-api';
 import { authorize } from 'middleware/auth';
 import { z } from 'zod';
