@@ -9,8 +9,14 @@ class AuthStore {
 	}
 
 	setUser(user: object, token: string) {
-		this.user = user;
-		this.token = token;
+		this.user = user
+		this.token = token
+	}
+
+	logout() {
+		this.user = undefined
+		this.token = undefined
+		window.location.reload()
 	}
 }
 
