@@ -1,6 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import express, { Express, Request, Response } from 'express';
 import { createHttpError, defaultEndpointsFactory, DependsOnMethod } from 'express-zod-api';
+import { authorize } from 'middleware/auth';
 import { z } from 'zod';
 
 interface CreateCourseBody{
@@ -19,27 +20,32 @@ const CourseModel = z.object({
 
 export default (prisma: PrismaClient) => {
 
-	const createCourseEndpoint = defaultEndpointsFactory.build({
-		method: "post",
-		input: z.object({
-			title: z.string(),
-			description: z.string().optional(),
-		}),
-		output: CourseModel,
-		handler: async ({ 
-			input: {
-				title,
-				description,
-			}
-		}) => {
-			return await prisma.course.create({
-				data: {
+	const createCourseEndpoint = defaultEndpointsFactory
+		.addMiddleware(authorize)
+		.build({
+			method: "post",
+			input: z.object({
+				title: z.string(),
+				description: z.string().optional(),
+			}),
+			output: CourseModel,
+			handler: async ({ 
+				input: {
 					title,
 					description,
-				}
-			})
-		},
-	})
+				},
+				options
+			}) => {
+				const user = options.user
+
+				return await prisma.course.create({
+					data: {
+						title,
+						description,
+					}
+				})
+			},
+		})
 
 	const getCourseEndpoint = defaultEndpointsFactory.build({
 		method: "get",
