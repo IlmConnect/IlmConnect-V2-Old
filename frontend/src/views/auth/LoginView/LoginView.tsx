@@ -32,7 +32,7 @@ function LogInView() {
 		finally {
 			setLoading(false)
 		}		
-	};
+	}
 
 	return (
 		<FullScreenGrid

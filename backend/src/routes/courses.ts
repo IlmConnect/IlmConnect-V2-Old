@@ -1,5 +1,7 @@
 import { PrismaClient } from '@prisma/client';
 import express, { Express, Request, Response } from 'express';
+import { createHttpError, defaultEndpointsFactory } from 'express-zod-api';
+import { z } from 'zod';
 
 interface CreateCourseBody{
     title: string,
@@ -7,54 +9,75 @@ interface CreateCourseBody{
     id: string,
 }
 
-const initCourseRoutes = (app:any, prisma:any) => {
-	//create course
-	app.post('/course', async (req: Request<CreateCourseBody>, res: Response) => {
-		try{
-			const {title, description} = req.body;
-			const course = await prisma.course.create({
-				data:{
-					title: title,
-					description: description,
+const CourseModel = z.object({
+	id: z.string(),
+	title: z.string(),
+	description: z.string().nullable(),
+	createdAt: z.date(),
+	updatedAt: z.date(),
+})
+
+export default (prisma: PrismaClient) => {
+
+	const createCourseEndpoint = defaultEndpointsFactory.build({
+		method: "post",
+		input: z.object({
+			title: z.string(),
+			description: z.string().optional(),
+		}),
+		output: CourseModel,
+		handler: async ({ 
+			input: {
+				title,
+				description,
+			}
+		}) => {
+			return await prisma.course.create({
+				data: {
+					title,
+					description,
 				}
-			});
-			res.json(course);
-		}
-		catch(err:any){
-			console.error(err.message);
-		}
-	});
+			})
+		},
+	})
 
-
-	//get all courses
-	app.get('/course', async (req: Request<CreateCourseBody>, res: Response) => {
-		try{
-			const courses = await prisma.course.findMany();
-			res.json(courses);
-		}
-		catch(err:any){
-			console.error(err.message);
-		}
-	});
-
-	//get a course by id
-	app.get('/course/:id', async (req: Request, res: Response) => {
-		try{
-			const id = req.params.id;
+	const getCourseEndpoint = defaultEndpointsFactory.build({
+		method: "get",
+		input: z.object({
+			id: z.string(),
+		}),
+		output: CourseModel,
+		handler: async ({ 
+			input: {
+				id
+			}
+		}) => {
 			const course = await prisma.course.findUnique({
-				where:{
-					id: parseInt(id,10),
-				},
-				include:{
-					members: true
+				where: {
+					id,
 				}
-			});
-			res.json(course);
-		}
-		catch(err:any){
-			console.error(err.message);
-		}
-	});
+			})
+
+			if (!course) {
+				throw createHttpError(500, 'There was an error creating this course')
+			}
+
+			return course
+		},
+	})
+
+	const getCoursesEndpoint = defaultEndpointsFactory.build({
+		method: "get",
+		input: z.object({}),
+		output: z.object({
+			courses: CourseModel.array(),
+		}),
+		handler: async ({}) => {
+			return {
+				courses: await prisma.course.findMany(),
+			}
+		},
+	})
 
 	//get all members enrolled in course by id
 	app.get('/course/course_members/:id', async (req: Request, res: Response) => {
@@ -110,7 +133,4 @@ const initCourseRoutes = (app:any, prisma:any) => {
 			console.error(err.message);
 		}
 	});
-
-};
-
-export default initCourseRoutes;
+}
