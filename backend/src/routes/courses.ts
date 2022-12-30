@@ -1,6 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import express, { Express, Request, Response } from 'express';
-import { createHttpError, defaultEndpointsFactory } from 'express-zod-api';
+import { createHttpError, defaultEndpointsFactory, DependsOnMethod } from 'express-zod-api';
 import { z } from 'zod';
 
 interface CreateCourseBody{
@@ -66,7 +66,7 @@ export default (prisma: PrismaClient) => {
 		},
 	})
 
-	const getCoursesEndpoint = defaultEndpointsFactory.build({
+	const findCoursesEndpoint = defaultEndpointsFactory.build({
 		method: "get",
 		input: z.object({}),
 		output: z.object({
@@ -133,4 +133,14 @@ export default (prisma: PrismaClient) => {
 			console.error(err.message);
 		}
 	});
+
+	return {
+		courses: {
+			'': new DependsOnMethod({
+				get: findCoursesEndpoint,
+				post: createCourseEndpoint
+			}),
+			':id': getCourseEndpoint,
+		}	
+	}
 }

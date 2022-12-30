@@ -6,9 +6,6 @@ import cors from 'cors';
 import { createConfig, createServer } from 'express-zod-api'
 import routes from './routes'
 
-const app: Express = express();
-app.use(express.json()); 
-app.use(cors()); 
 const prisma = new PrismaClient();
 
 const config = createConfig({
@@ -25,7 +22,7 @@ const config = createConfig({
 
 createServer(
 	config,
-	routes(app, prisma)
+	routes(prisma)
 )
 
 
