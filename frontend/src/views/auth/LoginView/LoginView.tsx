@@ -25,8 +25,9 @@ function LogInView() {
 			authStore.setUser(res.data?.user, res.data?.token)
 			navigate('/');
 		}
-		catch (e) {
-			alert('There was an error singing you up. Please try again later')
+		catch (e: any) {
+			const errorMessage = e?.response?.data?.error?.message
+			alert(errorMessage)
 		}
 		finally {
 			setLoading(false)
@@ -93,9 +94,9 @@ function LogInView() {
 			</Button>
 
 			<Typography>
-				Already have an account?&nbsp;
-				<Link to="/login">
-					Log In
+				Don't have an account?&nbsp;
+				<Link to="/signup">
+					Sign UP
 				</Link>
 			</Typography>
 		</FullScreenGrid>

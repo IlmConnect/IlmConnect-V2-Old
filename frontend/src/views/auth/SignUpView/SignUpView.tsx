@@ -26,8 +26,9 @@ function SignUpView() {
 			authStore.setUser(res.data?.user, res.data?.token)
 			navigate('/');
 		}
-		catch (e) {
-			alert('There was an error singing you up. Please try again later')
+		catch (e: any) {
+			const errorMessage = e?.response?.data?.error?.message
+			alert(errorMessage)
 		}
 		finally {
 			setLoading(false);
