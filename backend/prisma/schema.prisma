@@ -11,20 +11,20 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
-  createdAt DateTime @default(now())
+  id        String          @id @default(uuid())
+  createdAt DateTime        @default(now())
   firstName String
   lastName  String
-  email     String   @unique
+  email     String          @unique
   password  String
-  role      Role?    @default(ADMIN)
+  role      Role?           @default(ADMIN)
   courses   CourseMembers[]
 }
 
 model Course {
-  id          Int             @id @default(autoincrement())
+  id          String          @id @default(uuid())
   title       String
-  description String
+  description String?
   members     CourseMembers[]
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
@@ -32,7 +32,7 @@ model Course {
 
 model CourseMembers {
   role     Role
-  courseId Int
+  courseId String
   userId   String
   user     User   @relation(fields: [userId], references: [id])
   course   Course @relation(fields: [courseId], references: [id])

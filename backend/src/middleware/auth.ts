@@ -1,28 +1,29 @@
-import { Request, Response, NextFunction } from "express";
-import config from "../config";
-import jwt from "jsonwebtoken";
-import { User } from "@prisma/client";
+import { Request, Response, NextFunction } from 'express';
+import config from '../config';
+import jwt from 'jsonwebtoken';
+import { User } from '@prisma/client';
+import { createHttpError, createMiddleware } from 'express-zod-api';
+import { z } from 'zod';
 
-interface RequestWithUser extends Request {
-  user: User | undefined;
-}
+type UserWithoutPassword = Omit<User, 'password'>
 
-const verifyToken = (
-  req: RequestWithUser,
-  res: Response,
-  next: NextFunction
-) => {
-  //splitting token string for "Bearer"
-  const token = req.headers.authorization?.split(" ")[1];
-  if (!token) {
-    return res
-      .status(401)
-      .json({ success: false, message: "Error! Token was not provided." });
-  }
+export const authorize = createMiddleware({
+	security: {
+		and: [
+			{ type: 'bearer' }
+		]
+	},
+	input: z.object({}),
+	middleware: async ({ request }) => {
+		const header = request.headers.authorization?.split(' ')
 
-  const decodedToken = jwt.verify(token, config.auth.jwt.key);
-  req.user = decodedToken as User;
-  next();
-};
+		if (!header || header.length !== 2) {
+			throw createHttpError(401, 'This is not a valid token')
+		}
 
-export default verifyToken;
+		const [_, token] = header
+		const user = jwt.verify(token, config.auth.jwt.key) as UserWithoutPassword
+
+		return { user }
+	}
+})

@@ -1,18 +1,18 @@
-import { makeAutoObservable } from "mobx"
+import { makeAutoObservable } from 'mobx';
 
 class AuthStore {
-	user: object | undefined
-	token: string | undefined
+	user: object | undefined;
+	token: string | undefined;
 
 	constructor() {
-		makeAutoObservable(this)
+		makeAutoObservable(this);
 	}
 
 	setUser(user: object, token: string) {
-		this.user = user
-		this.token = token
+		this.user = user;
+		this.token = token;
 	}
 }
 
-const authStore = new AuthStore()
-export default authStore
+const authStore = new AuthStore();
+export default authStore;

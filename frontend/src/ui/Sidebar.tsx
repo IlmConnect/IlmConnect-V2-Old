@@ -1,5 +1,5 @@
-import { Drawer, styled, Theme, useMediaQuery, useTheme } from "@mui/material";
-import { StyledProps } from "./types";
+import { Drawer, styled, Theme, useMediaQuery, useTheme } from '@mui/material';
+import { StyledProps } from './types';
 
 
 const StyledDrawer = styled(Drawer)`
@@ -24,21 +24,21 @@ const StyledDrawer = styled(Drawer)`
 		left: 0;
 		right: 0;
 	}
-`
+`;
 
 
 function Sidebar() {
-	const theme = useTheme()
-	const isMobile = useMediaQuery(theme.breakpoints.down('md'))
+	const theme = useTheme();
+	const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
 	return (
 		<>
 			<StyledDrawer
-				variant={isMobile? "temporary" : "permanent"}
+				variant={isMobile? 'temporary' : 'permanent'}
 			/>
 
 		</>
-	)
+	);
 }
 
-export default Sidebar
+export default Sidebar;

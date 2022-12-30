@@ -1,7 +1,7 @@
-import { AppBar, Unstable_Grid2 } from "@mui/material";
-import { Box } from "@mui/system";
-import { Outlet } from "react-router-dom";
-import Sidebar from "../ui/Sidebar";
+import { AppBar, Unstable_Grid2 } from '@mui/material';
+import { Box } from '@mui/system';
+import { Outlet } from 'react-router-dom';
+import Sidebar from '../ui/Sidebar';
 
 
 function DrawerLayout() {
@@ -22,6 +22,6 @@ function DrawerLayout() {
 				<Outlet />
 			</Box>
 		</Unstable_Grid2>
-	)
+	);
 }
-export default DrawerLayout
+export default DrawerLayout;
