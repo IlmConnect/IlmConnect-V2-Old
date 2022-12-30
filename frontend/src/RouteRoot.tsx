@@ -4,6 +4,7 @@ import DrawerLayout from './layouts/Drawer';
 import CreateCourse from './routes/createCourse';
 import SignUpView from './views/SignUp';
 import LogInView from './views/LogIn';
+import DynamicForm from 'components/DynamicForm/DynamicForm';
 
 export default function RouteRoot() {
     return (
@@ -27,7 +28,9 @@ export default function RouteRoot() {
                 <Route path='/tab1' element = {<Page pageName='tab1'></Page>}/>
                 <Route path='/tab2' element = {<Page pageName='tab2'></Page>}/>
                 <Route path='/tab3' element = {<Page pageName='tab3'></Page>}/>
-                <Route path='/course-creation' element = {<CreateCourse/>}/>
+
+                <Route path='/form/create' element = {<DynamicForm/>}/>
+                
                 <Route path='*'element = {<Navigate to='/tab1' replace></Navigate>}/>
             </Routes>
         </div>
