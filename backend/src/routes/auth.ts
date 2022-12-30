@@ -31,7 +31,7 @@ async function getUser(prisma: PrismaClient, email: string) {
 	}
 }
 
-export default (app: Express, prisma: PrismaClient) => {
+export default (prisma: PrismaClient) => {
 	const signupEndpoint = defaultEndpointsFactory.build({
 		method: "post",
 		input: z.object({
@@ -77,7 +77,7 @@ export default (app: Express, prisma: PrismaClient) => {
 				token,
 			}
 		},
-	});
+	})
 
 	const loginEndpoint = defaultEndpointsFactory.build({
 		method: "post",
@@ -117,36 +117,7 @@ export default (app: Express, prisma: PrismaClient) => {
 				token,
 			}
 		},
-	});
-
-	// create user on signup
-	app.post('/signup', async (req: Request, res: Response) => {
-		const { email, password } = req.body;
-
-		if (!email || !password) {
-			return res.status(400).send('Bad Request');
-		}
-
-		// TODO: verify email/password
-
-
-		const newUser: Prisma.UserCreateInput = {
-			firstName: '',
-			lastName: '',
-			email,
-			password: await hash(password, 12),
-		};
-
-		const user = await prisma.user.create({ data: newUser });
-
-		const token = createUserJWT(user);
-		
-		// TODO: figure out a way to always block password from being sent
-		res.status(201).json({ 
-			user: { ...user, password: undefined }, 
-			token 
-		});
-	});
+	})
 
 	return {
 		login: loginEndpoint,

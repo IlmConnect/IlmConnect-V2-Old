@@ -19,7 +19,6 @@ function SignUpView() {
 	const [loading, setLoading] = useState(false)
 	
 	const signUp = async (data: FormData) => {
-		
 		try {
 			setLoading(true);
 			const res = await axios.post(config.backend.url + 'signup', data)
@@ -33,7 +32,7 @@ function SignUpView() {
 		finally {
 			setLoading(false);
 		}		
-	};
+	}
 
 	return (
 		<FullScreenGrid
