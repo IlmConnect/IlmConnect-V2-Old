@@ -1,7 +1,7 @@
-import defaultConfig from './default'
+import defaultConfig from './default';
 
 const config = {
 	...defaultConfig,
-}
+};
 
-export default config
+export default config;
