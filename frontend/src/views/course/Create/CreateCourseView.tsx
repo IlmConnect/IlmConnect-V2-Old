@@ -1,7 +1,10 @@
-import { Button, CircularProgress, TextField } from "@mui/material"
+import { Button, CircularProgress, TextField, Typography } from "@mui/material"
+import axios from "axios"
 import HtmlEditor from "components/HtmlEditor/HtmlEditor"
+import config from "config"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
+import authStore from "store/auth"
 import LoadingSpinner from "ui/LoadingٍSpinner"
 import FullScreenGrid from "views/auth/components/FullScreenGrid/FullScreenGrid"
 
@@ -14,8 +17,20 @@ const CreateCourseView: React.FC = () => {
 	const { register, formState: { errors }, handleSubmit, setValue } = useForm<FormData>()
 	const [loading, setLoading] = useState(false)
 
-	const createCourse = (data: FormData) => {
-		console.log(data)
+	const createCourse = async (data: FormData) => {
+		try {
+			setLoading(true);
+			const res = await axios.post(config.backend.url + 'courses', data)
+			console.log(res.data)
+			//navigate('/');
+		}
+		catch (e: any) {
+			const errorMessage = e?.response?.data?.error?.message
+			alert(errorMessage)
+		}
+		finally {
+			setLoading(false)
+		}
 	}
 
 	return (
@@ -23,6 +38,12 @@ const CreateCourseView: React.FC = () => {
 			container
 			gap={2}
 		>
+			<Typography
+				variant="h4"
+			>
+				Create Course
+			</Typography>
+
 			<TextField
 				id="title"
 				label="Title"
