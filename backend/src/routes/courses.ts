@@ -1,7 +1,8 @@
-import { PrismaClient } from '@prisma/client';
+import { Prisma, PrismaClient } from '@prisma/client';
 import { Request, Response } from 'express';
 import { createHttpError, defaultEndpointsFactory, DependsOnMethod } from 'express-zod-api';
 import { authorize } from 'middleware/auth'
+import { StringLiteralType } from 'typescript';
 import { z } from 'zod';
 
 interface CreateCourseBody{
@@ -23,6 +24,33 @@ const CourseModel = z.object({
 	createdAt: z.date(),
 	updatedAt: z.date(),
 })
+
+async function courseExists(prisma: PrismaClient, courseId: string) : Promise<boolean>{
+	const course = await prisma.course.findUnique({
+		where: {
+			id: courseId
+		}
+	})
+
+	if(!course){
+		return false
+	}
+	return true 
+}
+
+async function userEnrolled(prisma: PrismaClient, userId: string, courseId: string) : Promise<boolean> {
+	const result = await prisma.courseMembers.findFirst({
+		where: {
+			userId: userId,
+			courseId: courseId
+		}
+	})
+
+	if(!result){
+		return false
+	}
+	return true 
+}
 
 export default (prisma: PrismaClient) => {
 
@@ -60,6 +88,7 @@ export default (prisma: PrismaClient) => {
 		}),
 		output: CourseModel,
 		handler: async ({ input: {id}}) => {
+			console.log(id)
 			const course = await prisma.course.findUnique({
 				where: {
 					id: id
@@ -172,10 +201,19 @@ export default (prisma: PrismaClient) => {
 			}),
 			handler: async ({ input: {id}, options }) => {
 				const user = options.user
-				if( user.role == null || user.id == null){
+				if(user.id == null || user.role == null){
 						throw createHttpError(500, 'Failed to register in course!')
 				}
+
+				const courseRes = await courseExists(prisma, id)
+		
+				if(!courseRes){
+					throw createHttpError(404, 'Course does not exist!')
+				}
 				
+				if(await userEnrolled(prisma, user.id, id)){
+					throw createHttpError(400, 'User is already enrolled in the course!')
+				}
 				const result = await prisma.courseMembers.create({
 					data: {
 						role: user.role,
@@ -198,12 +236,17 @@ export default (prisma: PrismaClient) => {
 				get: findCoursesEndpoint,
 				post: createCourseEndpoint
 			}),
-			'/:id': new DependsOnMethod({
-				get: getCourseByIdEndpoint,
-				put: updateCourseByIdEndpoint,
-				delete: deleteCourseByIdEndpoint
-			}),
-			'/course_members/:id' : registerCourseByIdEndpoint     /* Defaulted to POST method, no other endpoint for this route */
+
+			":id" : {
+				users: new DependsOnMethod({
+					post: registerCourseByIdEndpoint
+				}),
+				"": new DependsOnMethod({
+						get: getCourseByIdEndpoint,
+						put: updateCourseByIdEndpoint,
+						delete: deleteCourseByIdEndpoint
+				})
+			}
 		}	
 	}
 }
