@@ -17,9 +17,16 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import { Button, Link, Unstable_Grid2 } from '@mui/material';
+import { observer } from 'mobx-react-lite';
+import authStore from 'store/auth';
+import { useNavigate } from 'react-router-dom';
 
 const drawerWidth = 240;
 
+const ToolbarFlex = styled(Toolbar)`
+  justify-content: space-between;
+`
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
   transition: theme.transitions.create('width', {
@@ -89,7 +96,8 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
-export default function MiniDrawer() {
+function MiniDrawer() {
+  const navigate = useNavigate()
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
@@ -105,7 +113,7 @@ export default function MiniDrawer() {
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
-        <Toolbar>
+        <ToolbarFlex>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -118,10 +126,19 @@ export default function MiniDrawer() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Mini variant drawer
-          </Typography>
-        </Toolbar>
+
+          <Button
+            variant='contained'
+            color='secondary'
+            onClick={() => authStore.user ?
+              authStore.logout() :
+              navigate('/login')
+            }
+          >
+            {authStore.user ? 'Logout' : 'Login'}
+          </Button>
+
+        </ToolbarFlex>
       </AppBar>
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
@@ -132,7 +149,7 @@ export default function MiniDrawer() {
         </DrawerHeader>
         <Divider />
         <List>
-          {[{text: 'Dashboard', component: <DashboardIcon/>}, {text: 'Announcement', component: <DashboardIcon/>}].map((sidebarItem) => (
+          {[{ text: 'Dashboard', component: <DashboardIcon /> }, { text: 'Announcement', component: <DashboardIcon /> }].map((sidebarItem) => (
             <ListItem key={sidebarItem.text} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
                 sx={{
@@ -148,7 +165,7 @@ export default function MiniDrawer() {
                     justifyContent: 'center',
                   }}
                 >
-                   {sidebarItem.component}
+                  {sidebarItem.component}
                 </ListItemIcon>
                 <ListItemText primary={sidebarItem.text} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
@@ -190,3 +207,5 @@ export default function MiniDrawer() {
     </Box>
   );
 }
+
+export default observer(MiniDrawer)
