@@ -1,5 +1,5 @@
 import { Request, Response, Express } from 'express';
-import config from 'config';
+import config from 'config'
 import jwt from 'jsonwebtoken';
 import bcrypt, { hash } from 'bcrypt';
 import { Prisma, PrismaClient, User } from '@prisma/client';
@@ -17,7 +17,7 @@ const UserModel = z.object({
 
 function createUserJWT(user: User): string {
 	return jwt.sign(
-		{ userId: user.id, email: user.email },
+		{ ...user, password: undefined },
 		config.auth.jwt.key,
 		{ expiresIn: config.auth.jwt.expiration }
 	);
