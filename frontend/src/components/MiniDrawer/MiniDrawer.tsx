@@ -17,10 +17,23 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import DashboardIcon from '@mui/icons-material/Dashboard';
+import AnnouncementIcon from '@mui/icons-material/Announcement';
+import GroupIcon from '@mui/icons-material/Group';
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import TodayIcon from '@mui/icons-material/Today';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { Button, Link, Unstable_Grid2 } from '@mui/material';
 import { observer } from 'mobx-react-lite';
 import authStore from 'store/auth';
 import { useNavigate } from 'react-router-dom';
+import Breadcrumbs from '@mui/material/Breadcrumbs';
+import Paper from '@mui/material/Paper';
+import Grid from '@mui/material/Unstable_Grid2';
+import Card from '@mui/material/Card';
+import CardActions from '@mui/material/CardActions';
+import CardContent from '@mui/material/CardContent';
+import { maxWidth } from '@mui/system';
+import Stack from '@mui/material/Stack';
 
 const drawerWidth = 240;
 
@@ -47,6 +60,29 @@ const closedMixin = (theme: Theme): CSSObject => ({
     width: `calc(${theme.spacing(8)} + 1px)`,
   },
 });
+
+function handleClick(event: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+  event.preventDefault();
+  console.info('You clicked a breadcrumb.');
+}
+
+const Item = styled(Paper)(({ theme }) => ({
+  backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: 'center',
+  color: theme.palette.text.secondary,
+}));
+
+
+const bull = (
+  <Box
+    component="span"
+    sx={{ display: 'inline-block', mx: '2px', transform: 'scale(0.8)' }}
+  >
+    •
+  </Box>
+);
 
 export const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -142,14 +178,20 @@ function MiniDrawer() {
       </AppBar>
       <Drawer variant="permanent" open={open}>
         <DrawerHeader>
-          <h1>Something</h1>
+          {/* <h1>Something</h1> */}
           <IconButton onClick={handleDrawerClose}>
             {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </IconButton>
         </DrawerHeader>
         <Divider />
         <List>
-          {[{ text: 'Dashboard', component: <DashboardIcon /> }, { text: 'Announcement', component: <DashboardIcon /> }].map((sidebarItem) => (
+          {[{ text: 'Dashboard', component: <DashboardIcon /> },
+            { text: 'Announcement', component: <AnnouncementIcon /> },
+            { text: 'Users', component: <GroupIcon /> },
+            { text: 'Programs', component: <LibraryBooksIcon /> },
+            { text: 'My Bookings', component: <TodayIcon /> },
+            { text: 'Settings', component: <SettingsIcon /> }
+          ].map((sidebarItem) => (
             <ListItem key={sidebarItem.text} disablePadding sx={{ display: 'block' }}>
               <ListItemButton
                 sx={{
@@ -176,32 +218,93 @@ function MiniDrawer() {
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
+        <div role="presentation" onClick={handleClick}>
+      <Breadcrumbs aria-label="breadcrumb">
+        <Link underline="hover" color="inherit" href="/">
+          Make
+        </Link>
+        <Link
+          underline="hover"
+          color="inherit"
+          href="/material-ui/getting-started/installation/"
+        >
+          This work
+        </Link>
+        <Typography color="text.primary">Breadcrumbs</Typography>
+      </Breadcrumbs>
+    </div>
+    <Box sx={{ width: '100%' }}>
+      <Stack
+        direction="row"
+        justifyContent="center"
+        alignItems="stretch"
+        spacing={2}
+      >
+        <Item sx={{ minWidth: 500}}>Item 1</Item>
+        <Item sx={{ maxWidth: 500}}>Item 2</Item>
+      </Stack>
+    </Box>
+      <Grid container spacing={2}>
+        <Grid xs={8} container> 
+          <Item sx={{ minWidth: 275, maxWidth: 500}}>    
+            <Card>
+            <CardContent>
+              <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                Word of the Day
+              </Typography>
+              <Typography variant="h5" component="div">
+                be{bull}nev{bull}o{bull}lent
+              </Typography>
+              <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                adjective
+              </Typography>
+              <Typography variant="body2">
+                well meaning and kindly.
+                <br />
+                {'"a benevolent smile"'}
+              </Typography>
+            </CardContent>
+            <CardActions>
+              <Button size="small">Learn More</Button>
+            </CardActions>
+          </Card>
+          </Item>
+          <Item sx={{ minWidth: 275, maxWidth: 500}}>        
+          <Card>
+            <CardContent>
+              <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+                Word of the Day
+              </Typography>
+              <Typography variant="h5" component="div">
+                be{bull}nev{bull}o{bull}lent
+              </Typography>
+              <Typography sx={{ mb: 1.5 }} color="text.secondary">
+                adjective
+              </Typography>
+              <Typography variant="body2">
+                well meaning and kindly.
+                <br />
+                {'"a benevolent smile"'}
+              </Typography>
+            </CardContent>
+            <CardActions>
+              <Button size="small">Learn More</Button>
+            </CardActions>
+          </Card>
+          <br/><br/> 
+        </Item>
+          <Item>Main Content <br/><br/> </Item>
+        </Grid>
+        <Grid xs={4}>
+          Side Content <br/> This section will summarize upcoming dates either in a list or calendar view. Maybe the timeline MUI component
+          
+        </Grid>
+      </Grid>
         <Typography paragraph>
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-          tempor incididunt ut labore et dolore magna aliqua. Rhoncus dolor purus non
-          enim praesent elementum facilisis leo vel. Risus at ultrices mi tempus
-          imperdiet. Semper risus in hendrerit gravida rutrum quisque non tellus.
-          Convallis convallis tellus id interdum velit laoreet id donec ultrices.
-          Odio morbi quis commodo odio aenean sed adipiscing. Amet nisl suscipit
-          adipiscing bibendum est ultricies integer quis. Cursus euismod quis viverra
-          nibh cras. Metus vulputate eu scelerisque felis imperdiet proin fermentum
-          leo. Mauris commodo quis imperdiet massa tincidunt. Cras tincidunt lobortis
-          feugiat vivamus at augue. At augue eget arcu dictum varius duis at
-          consectetur lorem. Velit sed ullamcorper morbi tincidunt. Lorem donec massa
-          sapien faucibus et molestie ac.
+          Coming Soon
         </Typography>
         <Typography paragraph>
-          Consequat mauris nunc congue nisi vitae suscipit. Fringilla est ullamcorper
-          eget nulla facilisi etiam dignissim diam. Pulvinar elementum integer enim
-          neque volutpat ac tincidunt. Ornare suspendisse sed nisi lacus sed viverra
-          tellus. Purus sit amet volutpat consequat mauris. Elementum eu facilisis
-          sed odio morbi. Euismod lacinia at quis risus sed vulputate odio. Morbi
-          tincidunt ornare massa eget egestas purus viverra accumsan in. In hendrerit
-          gravida rutrum quisque non tellus orci ac. Pellentesque nec nam aliquam sem
-          et tortor. Habitant morbi tristique senectus et. Adipiscing elit duis
-          tristique sollicitudin nibh sit. Ornare aenean euismod elementum nisi quis
-          eleifend. Commodo viverra maecenas accumsan lacus vel facilisis. Nulla
-          posuere sollicitudin aliquam ultrices sagittis orci a.
+          To a theatre near you
         </Typography>
       </Box>
     </Box>
