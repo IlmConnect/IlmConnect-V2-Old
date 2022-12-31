@@ -3,8 +3,9 @@ import config from 'config'
 import jwt from 'jsonwebtoken';
 import bcrypt, { hash } from 'bcrypt';
 import { Prisma, PrismaClient, User } from '@prisma/client';
-import { createHttpError, defaultEndpointsFactory, Routing } from "express-zod-api";
+import { createHttpError, defaultEndpointsFactory, Routing, EndpointsFactory } from "express-zod-api";
 import { z } from 'zod'
+
 
 const UserModel = z.object({
 	id: z.string().uuid(),

@@ -1,15 +1,9 @@
 import { Prisma, PrismaClient } from '@prisma/client';
 import { Request, Response } from 'express';
 import { createHttpError, defaultEndpointsFactory, DependsOnMethod } from 'express-zod-api';
-import { authorize } from 'middleware/auth'
+import { authenticate } from 'middleware/auth'
 import { StringLiteralType } from 'typescript';
 import { z } from 'zod';
-
-interface CreateCourseBody{
-    title: string,
-    body: string,
-    id: string,
-}
 
 const CourseMembersModel = z.object({
 	role: z.string(),
@@ -55,7 +49,7 @@ async function userEnrolled(prisma: PrismaClient, userId: string, courseId: stri
 export default (prisma: PrismaClient) => {
 
 	const createCourseEndpoint = defaultEndpointsFactory
-		.addMiddleware(authorize)
+		.addMiddleware(authenticate())
 		.build({
 			method: "post",
 			input: z.object({
@@ -68,10 +62,7 @@ export default (prisma: PrismaClient) => {
 					title,
 					description,
 				},
-				options
 			}) => {
-				const user = options.user
-
 				return await prisma.course.create({
 					data: {
 						title,
@@ -81,115 +72,125 @@ export default (prisma: PrismaClient) => {
 			},
 		})
 
-	const getCourseByIdEndpoint = defaultEndpointsFactory.build({
-		method: "get",
-		input: z.object({
-			id: z.string() 
-		}),
-		output: CourseModel,
-		handler: async ({ input: {id}}) => {
-			console.log(id)
-			const course = await prisma.course.findUnique({
-				where: {
-					id: id
+	const getCourseEndpoint = defaultEndpointsFactory
+		.addMiddleware(authenticate())
+		.build({
+			method: "get",
+			input: z.object({
+				id: z.string() 
+			}),
+			output: CourseModel,
+			handler: async ({ input: {id}}) => {
+				console.log(id)
+				const course = await prisma.course.findUnique({
+					where: {
+						id: id
+					}
+				})
+
+				if (!course) {
+					throw createHttpError(500, 'There was an error creating this course')
 				}
-			})
 
-			if (!course) {
-				throw createHttpError(500, 'There was an error creating this course')
-			}
+				return course
+			},
+		})
 
-			return course
-		},
-	})
-
-	const findCoursesEndpoint = defaultEndpointsFactory.build({
-		method: "get",
-		input: z.object({}),
-		output: z.object({
-			courses: CourseModel.array(),
-		}),
-		handler: async ({}) => {
-			return {
-				courses: await prisma.course.findMany(),
-			}
-		},
-	});
-
-	const getAllCourseMembersByIdEndpoint = defaultEndpointsFactory.build({
-		method: "get",
-		input: z.object({
-			id: z.string()
-		}),
-		output: z.object({}),
-		handler: async ({ input: {id} }) => {
-			const course = await prisma.course.findUnique({
-				where: {
-					id: id
-				},
-				select:{
-					members: true
+	const findCoursesEndpoint = defaultEndpointsFactory
+		.addMiddleware(authenticate())
+		.build({
+			method: "get",
+			input: z.object({}),
+			output: z.object({
+				courses: CourseModel.array(),
+			}),
+			handler: async ({}) => {
+				return {
+					courses: await prisma.course.findMany(),
 				}
-			})
+			},
+		});
 
-			if (!course) {
-				throw createHttpError(500, 'There was an error creating this course')
-			}
+	const getCourseMembersEndpoint = defaultEndpointsFactory
+		.addMiddleware(authenticate())
+		.build({
+			method: "get",
+			input: z.object({
+				id: z.string()
+			}),
+			output: z.object({}),
+			handler: async ({ input: {id} }) => {
+				const course = await prisma.course.findUnique({
+					where: {
+						id: id
+					},
+					select:{
+						members: true
+					}
+				})
 
-			return {course}
-		},
-	});
-
-	const deleteCourseByIdEndpoint = defaultEndpointsFactory.build({
-		method: "delete",
-		input: z.object({
-			id: z.string(),
-		}),
-		output: CourseModel,
-		handler: async ({ input: {id} }) => {
-			const course = await prisma.course.findUnique({
-				where: {
-					id: id
+				if (!course) {
+					throw createHttpError(500, 'There was an error creating this course')
 				}
-			})
 
-			if (!course) {
-				throw createHttpError(500, 'There was an error creating this course')
-			}
+				return {course}
+			},
+		})
 
-			return course
-		},
-	});
+	const deleteCourseEndpoint = defaultEndpointsFactory
+		.addMiddleware(authenticate())
+		.build({
+			method: "delete",
+			input: z.object({
+				id: z.string(),
+			}),
+			output: CourseModel,
+			handler: async ({ input: {id} }) => {
+				const course = await prisma.course.findUnique({
+					where: {
+						id: id
+					}
+				})
 
-	const updateCourseByIdEndpoint = defaultEndpointsFactory.build({
-		method: "put",
-		input: z.object({
-			id: z.string(),
-			title: z.string(),
-			description: z.string().optional()
-		}),
-		output: CourseModel,
-		handler: async ({ input: {id, title, description} }) => {
-			const course = await prisma.course.update({
-				where: {
-					id: id
-				},
-				data:{
-					title: title,
-					description: description
+				if (!course) {
+					throw createHttpError(500, 'There was an error creating this course')
 				}
-			})
 
-			if (!course) {
-				throw createHttpError(500, 'There was an error in updating this course')
-			}
+				return course
+			},
+		})
 
-			return course
-		},
-	});
+	const updateCourseEndpoint = defaultEndpointsFactory
+		.addMiddleware(authenticate())
+		.build({
+			method: "put",
+			input: z.object({
+				id: z.string(),
+				title: z.string(),
+				description: z.string().optional()
+			}),
+			output: CourseModel,
+			handler: async ({ input: {id, title, description} }) => {
+				const course = await prisma.course.update({
+					where: {
+						id: id
+					},
+					data:{
+						title: title,
+						description: description
+					}
+				})
+
+				if (!course) {
+					throw createHttpError(500, 'There was an error in updating this course')
+				}
+
+				return course
+			},
+		})
 	
-	const registerCourseByIdEndpoint = defaultEndpointsFactory
-		.addMiddleware(authorize)
+	const registerMemberInCourseEndpoint = defaultEndpointsFactory
+		.addMiddleware(authenticate())
 		.build({
 			method: "post",
 			input: z.object({
@@ -236,15 +237,15 @@ export default (prisma: PrismaClient) => {
 				get: findCoursesEndpoint,
 				post: createCourseEndpoint
 			}),
-
 			":id" : {
 				users: new DependsOnMethod({
-					post: registerCourseByIdEndpoint
+					post: registerMemberInCourseEndpoint,
+					get: getCourseMembersEndpoint
 				}),
 				"": new DependsOnMethod({
-						get: getCourseByIdEndpoint,
-						put: updateCourseByIdEndpoint,
-						delete: deleteCourseByIdEndpoint
+						get: getCourseEndpoint,
+						put: updateCourseEndpoint,
+						delete: deleteCourseEndpoint
 				})
 			}
 		}	
