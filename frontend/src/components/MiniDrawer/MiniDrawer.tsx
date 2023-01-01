@@ -34,12 +34,11 @@ import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import { maxWidth } from '@mui/system';
 import Stack from '@mui/material/Stack';
+import ToolBarComponent from 'components/ToolBar/ToolBarComponent';
+import MiniDrawerItem from './MiniDrawerItem';
 
 const drawerWidth = 240;
 
-const ToolbarFlex = styled(Toolbar)`
-  justify-content: space-between;
-`
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
   transition: theme.transitions.create('width', {
@@ -97,7 +96,7 @@ interface AppBarProps extends MuiAppBarProps {
   open?: boolean;
 }
 
-const AppBar = styled(MuiAppBar, {
+export const AppBar = styled(MuiAppBar, {
   shouldForwardProp: (prop) => prop !== 'open',
 })<AppBarProps>(({ theme, open }) => ({
   zIndex: theme.zIndex.drawer + 1,
@@ -132,87 +131,30 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
   }),
 );
 
-function MiniDrawer() {
+function MiniDrawer(props) {
   const navigate = useNavigate()
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
-
-  const handleDrawerOpen = () => {
-    setOpen(true);
-  };
-
-  const handleDrawerClose = () => {
-    setOpen(false);
-  };
 
   return (
     <Box sx={{ display: 'flex' }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open}>
-        <ToolbarFlex>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            sx={{
-              marginRight: 5,
-              ...(open && { display: 'none' }),
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-
-          <Button
-            variant='contained'
-            color='secondary'
-            onClick={() => authStore.user ?
-              authStore.logout() :
-              navigate('/login')
-            }
-          >
-            {authStore.user ? 'Logout' : 'Login'}
-          </Button>
-
-        </ToolbarFlex>
-      </AppBar>
-      <Drawer variant="permanent" open={open}>
+      <Drawer variant="permanent" open={props.isOpen}>
         <DrawerHeader>
           {/* <h1>Something</h1> */}
-          <IconButton onClick={handleDrawerClose}>
+          <IconButton onClick={props.handleDrawerOpenToggle}>
             {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </IconButton>
         </DrawerHeader>
         <Divider />
         <List>
-          {[{ text: 'Dashboard', component: <DashboardIcon /> },
-            { text: 'Announcement', component: <AnnouncementIcon /> },
-            { text: 'Users', component: <GroupIcon /> },
-            { text: 'Programs', component: <LibraryBooksIcon /> },
-            { text: 'My Bookings', component: <TodayIcon /> },
-            { text: 'Settings', component: <SettingsIcon /> }
+          {[{ text: 'Dashboard', icon: <DashboardIcon />, child: [{text: 'DashboardChild', icon: <DashboardIcon />, child: []}] },
+            { text: 'Announcement', icon: <AnnouncementIcon />, child: [] },
+            { text: 'Users', icon: <GroupIcon />, child: [] },
+            { text: 'Programs', icon: <LibraryBooksIcon />, child: [] },
+            { text: 'My Bookings', icon: <TodayIcon />, child: [] },
+            { text: 'Settings', icon: <SettingsIcon />, child: [] }
           ].map((sidebarItem) => (
-            <ListItem key={sidebarItem.text} disablePadding sx={{ display: 'block' }}>
-              <ListItemButton
-                sx={{
-                  minHeight: 48,
-                  justifyContent: open ? 'initial' : 'center',
-                  px: 2.5,
-                }}
-              >
-                <ListItemIcon
-                  sx={{
-                    minWidth: 0,
-                    mr: open ? 3 : 'auto',
-                    justifyContent: 'center',
-                  }}
-                >
-                  {sidebarItem.component}
-                </ListItemIcon>
-                <ListItemText primary={sidebarItem.text} sx={{ opacity: open ? 1 : 0 }} />
-              </ListItemButton>
-              <Divider />
-            </ListItem>
+            <MiniDrawerItem sidebarItem={sidebarItem} isOpen={props.isOpen}/>
           ))}
         </List>
       </Drawer>
