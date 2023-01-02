@@ -1,10 +1,11 @@
 import { Request, Response, Express } from 'express';
-import config from 'config';
+import config from 'config'
 import jwt from 'jsonwebtoken';
 import bcrypt, { hash } from 'bcrypt';
 import { Prisma, PrismaClient, User } from '@prisma/client';
-import { createHttpError, defaultEndpointsFactory, Routing } from "express-zod-api";
+import { createHttpError, defaultEndpointsFactory, Routing, EndpointsFactory } from "express-zod-api";
 import { z } from 'zod'
+
 
 const UserModel = z.object({
 	id: z.string().uuid(),
@@ -17,7 +18,7 @@ const UserModel = z.object({
 
 function createUserJWT(user: User): string {
 	return jwt.sign(
-		{ userId: user.id, email: user.email },
+		{ ...user, password: undefined },
 		config.auth.jwt.key,
 		{ expiresIn: config.auth.jwt.expiration }
 	);

@@ -7,6 +7,7 @@ import SignUpView from './views/auth/SignUpView/SignUpView';
 import LogInView from './views/auth/LoginView/LoginView';
 import Dashboard from 'views/Dashboard/Dashboard';
 import CreateCourseView from 'views/course/Create/CreateCourseView';
+import PageTemplate from 'components/PageTemplate/PageTemplate';
 
 export default function RouteRoot() {
 	return (
@@ -38,7 +39,7 @@ export default function RouteRoot() {
 
 				<Route path='/form/create' element = {<DynamicForm/>}/>
 
-                <Route path='*' element = {<Dashboard/>}/>
+				<Route path='*' element = {<Dashboard/>}/>
 			</Routes>
 		</div>
 	);
