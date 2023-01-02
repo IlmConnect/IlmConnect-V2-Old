@@ -9,8 +9,6 @@ import {
 	InputAdornment 
 } from '@mui/material';
 import { Stack } from '@mui/system';
-import { Dispatch, SetStateAction } from 'react';
-
 
 const TypographyStyling = styled(Typography)`
   margin-left: 10%;
@@ -25,18 +23,12 @@ const ButtonContainer = styled.div`
   margin-top: 50px;
 `;
 
-const FormControlLabelStyle = styled(FormControlLabel)`
+const FormControlLabelContainer = styled.div`
   margin-left: 10%;
 `;
 
-interface props{
-	fieldName : string,
-	fieldValues : Array<string>,
-	fieldState : object, 
-	setFieldState:  Dispatch<SetStateAction<object>>
-}
+export const FormQuestionnaire = ({fieldName, fieldValues, fieldState, setFieldState}:any) => {
 
-export const FormRadioGroup = ({fieldName, fieldValues, fieldState, setFieldState}: props) => {
 
 	const addFieldValue = () => {
 		fieldValues.push('');
@@ -46,7 +38,7 @@ export const FormRadioGroup = ({fieldName, fieldValues, fieldState, setFieldStat
 	return (
 		<>
 			<Stack spacing={2}>
-				<TypographyStyling variant="overline" display="block">Multiple Choice Values</TypographyStyling>
+				<TypographyStyling variant="overline" display="block">Questionnaire Values</TypographyStyling>
 				<Divider />
       
 				<FormControl>
@@ -54,16 +46,18 @@ export const FormRadioGroup = ({fieldName, fieldValues, fieldState, setFieldStat
 					<TypographyFieldNameStyling variant="h6">{fieldName}</TypographyFieldNameStyling>
 					
 					<RadioGroup
-						aria-labelledby="demo-radio-buttons-group-label"
+						aria-labelledby="radio-button-label"
 						defaultValue="empty"
 						name="radio-buttons-group"
+						row
 					>
-
-						{fieldValues.length ? fieldValues.map((fields:string, index:number) => 
-							fieldValues[index] !== '' ? 
-								<FormControlLabelStyle key={index} value={index} control={<Radio />} label={fieldValues[index]} /> 
-								: <FormControlLabelStyle key={index} value={index} control={<Radio />} label="Enter a Value" /> 
-						) : null}
+						<FormControlLabelContainer>
+							{fieldValues.length ? fieldValues.map((fields:string, index:number) => 
+								fieldValues[index] !== '' ? 
+									<FormControlLabel key={index} value={index} control={<Radio />} label={fieldValues[index]} /> 
+									: <FormControlLabel key={index} value={index} control={<Radio />} label="Enter a Value" /> 
+							) : null}
+						</FormControlLabelContainer>
 					</RadioGroup>
 				</FormControl>
 				{
@@ -79,7 +73,7 @@ export const FormRadioGroup = ({fieldName, fieldValues, fieldState, setFieldStat
 						style={{marginLeft: '10%', marginRight: '10%'}} 
 						InputProps={{
 							endAdornment: 
-							<InputAdornment position="end"><Button variant="contained"  color="error" onClick={(e) => (fieldValues.splice(index,1), setFieldState({...fieldState})
+							<InputAdornment position="end"><Button variant="contained"  color="error" onClick={() => (fieldValues.splice(index,1), setFieldState({...fieldState})
 							)}>X</Button></InputAdornment>
 						}}
 						onChange={(e) => (fieldValues[index] = e.target.value , setFieldState({...fieldState}))} />

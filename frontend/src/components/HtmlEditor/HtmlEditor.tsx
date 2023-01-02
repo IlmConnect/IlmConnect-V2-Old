@@ -1,5 +1,5 @@
-import React, { forwardRef, SyntheticEvent, useRef } from 'react'
-import { Editor } from '@tinymce/tinymce-react'
+import React, { forwardRef, SyntheticEvent, useRef } from 'react';
+import { Editor } from '@tinymce/tinymce-react';
 
 interface Event {
 	target: {
@@ -33,7 +33,7 @@ const HtmlEditor: React.FC<Props> = forwardRef<any, Props>((
 			onEditorChange={(value, editor) => onChange?.(value)}
 			disabled={disabled}
 		/>
-	)
-})
+	);
+});
 
-export default HtmlEditor
+export default HtmlEditor;

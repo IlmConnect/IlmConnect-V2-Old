@@ -9,14 +9,17 @@ import {
 	FormControl,
 	Box,
 	Divider,
+	Card,
+	Typography
 } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import Select from '@mui/material/Select';
 import InputLabel from '@mui/material/InputLabel';
 import { createElement } from 'react';
-import { FormRadioGroup } from './FormComponents/FormRadioGroup';
-import {FormTextBlock} from './FormComponents/FormTextBlock';
-
+import { FormRadioGroup} from './FormComponents/FormRadioGroup';
+import { FormTextBlock } from './FormComponents/FormTextBlock';
+import {FormDropDown} from './FormComponents/FormDropDown';
+import { FormQuestionnaire } from './FormComponents/FormQuestionnaire';
 
 const Container = styled.div`
   width: 100%;
@@ -41,9 +44,15 @@ const ButtonContainer = styled.div`
   margin-top: 50px;
 `;
 
-const FormContainter = styled.div`
-  background: lightgray;
+const FormSubmitButtonContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+`;
+
+const FormContainter = styled(Card)`
   margin-top: 30px;
+  min-height: 250px;
   height: auto;
   justify-content: center;
 `;
@@ -83,18 +92,17 @@ const DividerStyle = styled(Divider)`
 
 const fieldTypeHelper:any = {
 	'Multiple Choice': FormRadioGroup,
-	'Textblock' : FormTextBlock,
+	Textblock : FormTextBlock,
+	Dropdown : FormDropDown,
+	Questionnaire : FormQuestionnaire,
 };
-const formChoices = ['Multiple Choice', 'Textblock', 'Dropdown', 'Checkbox'];
+const formChoices = ['Multiple Choice', 'Textblock', 'Dropdown', 'Questionnaire'];
 
 
 const DynamicForm = () => {
-	const [title, setTitle] = useState('');
-	const [description, setDescription] = useState('');
-	const [formCount, setformCount] = useState(1);
-	const [formSelection, setFormSelection] = useState('');
-
 	const [fieldState, setFieldState] = useState({
+		formTitle: '',
+		formDescription: '',
 		currentId: 1,
 		fields: [
 			{
@@ -104,20 +112,37 @@ const DynamicForm = () => {
 				fieldValues: [],
 				required: false,
 				sensitive: false,
+				toggleHide: false,
 			},
 		],
 	});
 
 	const handleSetTitle = (e: string) => {
-		setTitle(e);
+		setFieldState({
+			formTitle: e,
+			formDescription: fieldState.formDescription,
+			currentId: fieldState.currentId,
+			fields: [...fieldState.fields]
+		});
 	};
 	const handleSetDescription = (e: string) => {
-		setDescription(e);
+		setFieldState({
+			formTitle: fieldState.formTitle,
+			formDescription: e,
+			currentId: fieldState.currentId,
+			fields: [...fieldState.fields]
+		});
+	};
+
+	const handleSubmitForm = () => {
+		//TODO submit form to backend
+		console.log();
 	};
 
 	const handleAddField = () => {
 		console.log(fieldState);
 		setFieldState({
+			...fieldState,	
 			currentId: fieldState.currentId + 1,
 			fields: [
 				...fieldState.fields,
@@ -128,18 +153,20 @@ const DynamicForm = () => {
 					fieldValues: [],
 					required: false,
 					sensitive: false,
+					toggleHide: false,
 				},
 			],
 		});
 	};
 
-	const renderFieldComponent = (field:any) => {
+	const renderFieldComponent = (field:{fieldName : string, fieldId : number, fieldType: string, fieldValues: Array<string>, toggleHide: boolean}) => {
 		if(typeof fieldTypeHelper[field.fieldType] !== 'undefined'){
 			return createElement(
 				fieldTypeHelper[field.fieldType],
 				{
 					fieldName: field.fieldName,
 					fieldValues: field.fieldValues,
+					toggleHide : field.toggleHide,
 					fieldState: fieldState,
 					setFieldState: setFieldState
 				}
@@ -147,6 +174,7 @@ const DynamicForm = () => {
 		}
 
 	};
+
 
 	const formTypeList = formChoices.map((choice, index) => (
 		<MenuItem key={index} value={choice}>
@@ -170,20 +198,24 @@ const DynamicForm = () => {
 						variant="filled"
 						multiline
 						rows={3}
-					/>
-
+					/>					
+					<FormSubmitButtonContainer>
+						<Button variant="contained" color="success" onClick={handleSubmitForm}>Submit Form</Button>
+					</FormSubmitButtonContainer>
 					<DividerStyle variant="middle" />
-
 					<Stack spacing={3}>
 						{fieldState.fields.map((fields, index) =>
 							fields.fieldId > 0 ? (
 								<FormContainter key={index}>
 									<Box style={{ width: '100%' }}>
 										<FieldsButtonContainer>
-											<FormButtonStyle variant="contained" color="inherit">
-												Hide
-											</FormButtonStyle>
-											<Button variant="contained" color="error" size="small">
+											{
+												!(fields.toggleHide) ? 											
+													<FormButtonStyle variant="contained" color="inherit" onClick={() => (fields.toggleHide = !(fields.toggleHide), setFieldState({...fieldState})) }>Hide</FormButtonStyle>
+													: <FormButtonStyle variant="contained" color="inherit" onClick={() => (fields.toggleHide = !(fields.toggleHide), setFieldState({...fieldState})) }>UnHide</FormButtonStyle>
+											}
+		
+											<Button variant="contained" color="error" size="small" onClick={() => (fieldState.fields.splice(index,1), setFieldState({...fieldState}))}>
 												Delete
 											</Button>
 										</FieldsButtonContainer>
@@ -191,26 +223,26 @@ const DynamicForm = () => {
 											<FieldNameStyle
 												onChange={(e) => {
 													fields.fieldName = e.target.value;
-													setFieldState({
-														currentId: fieldState.currentId,
+													setFieldState({...fieldState,
 														fields: [...fieldState.fields],
 													});
 												}}
 												label="Field Name"
 												variant="outlined"
 												required
+												value={fields.fieldName}
 											/>
 											<FormControl style={{ marginLeft: '10%', width: '80%' }}>
 												<InputLabel id="form-control-choices">Type</InputLabel>
 												<Select
 													labelId="form-select-label"
-													id="demo-simple-select"
+													id="form-select"
 													value={fields.fieldType}
 													label="Form"
 													onChange={(e) => {
 														fields.fieldType = e.target.value;
-														setFieldState({
-															currentId: fieldState.currentId,
+														fields.fieldValues.length ? fields.fieldValues = [] : null,
+														setFieldState({...fieldState,
 															fields: [...fieldState.fields],
 														});
 													}}
@@ -218,9 +250,8 @@ const DynamicForm = () => {
 													{formTypeList}
 												</Select>
 											</FormControl>
-
 											{
-												renderFieldComponent(fields)
+												!(fields.toggleHide) ? renderFieldComponent(fields) : null
 											}
 										</Stack>
 									</Box>
