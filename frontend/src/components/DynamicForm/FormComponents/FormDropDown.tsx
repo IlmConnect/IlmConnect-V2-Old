@@ -36,7 +36,7 @@ interface props{
 	setFieldState:  Dispatch<SetStateAction<object>>
 }
 
-export const FormDropDown = ({fieldName, fieldValues, fieldState, setFieldState}:any) => {
+export const FormDropDown = ({fieldName, fieldValues, fieldState, setFieldState}:props) => {
 	const [selection, setSelection] = useState('');
 
 	const addFieldValue = () => {

@@ -9,6 +9,7 @@ import {
 	InputAdornment 
 } from '@mui/material';
 import { Stack } from '@mui/system';
+import { Dispatch, SetStateAction } from 'react';
 
 const TypographyStyling = styled(Typography)`
   margin-left: 10%;
@@ -27,7 +28,15 @@ const FormControlLabelContainer = styled.div`
   margin-left: 10%;
 `;
 
-export const FormQuestionnaire = ({fieldName, fieldValues, fieldState, setFieldState}:any) => {
+
+interface props{
+	fieldName : string,
+	fieldValues : Array<string>,
+	fieldState : object, 
+	setFieldState:  Dispatch<SetStateAction<object>>
+}
+
+export const FormQuestionnaire = ({fieldName, fieldValues, fieldState, setFieldState}:props) => {
 
 
 	const addFieldValue = () => {
