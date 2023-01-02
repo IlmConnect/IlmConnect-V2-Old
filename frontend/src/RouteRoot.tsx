@@ -7,37 +7,43 @@ import LogInView from './views/auth/LoginView/LoginView';
 import Dashboard from 'views/Dashboard/Dashboard';
 import CreateCourseView from 'views/course/Create/CreateCourseView';
 import PageTemplate from 'components/PageTemplate/PageTemplate';
+import QuranTracker from 'views/plugins/QuranTracker';
 
 export default function RouteRoot() {
 	return (
 		<div>
 			<Routes>
-				<Route 
-					path='/signup' 
+				<Route
+					path='/signup'
 					element={<SignUpView />}
 				/>
-				<Route 
-					path='/login' 
+				<Route
+					path='/login'
 					element={<LogInView />}
 				/>
 
-				<Route 
-					path='/courses/create' 
+				<Route
+					path='/courses/create'
 					element={<CreateCourseView />}
 				/>
 
-				<Route 
+				<Route
+					path='/quran'
+					element={<QuranTracker />}
+				/>
+
+				<Route
 					element={<DrawerLayout />}
 				>
-                    
+
 				</Route>
 
-				<Route path='/tab1' element = {<Page pageName='tab1'></Page>}/>
-				<Route path='/tab2' element = {<Page pageName='tab2'></Page>}/>
-				<Route path='/tab3' element = {<Page pageName='tab3'></Page>}/>
-				<Route path='/course-creation' element = {<CreateCourse/>}/>
+				<Route path='/tab1' element={<Page pageName='tab1'></Page>} />
+				<Route path='/tab2' element={<Page pageName='tab2'></Page>} />
+				<Route path='/tab3' element={<Page pageName='tab3'></Page>} />
+				<Route path='/course-creation' element={<CreateCourse />} />
 				{/* <Route path='*'element = {<Navigate to='/tab1' replace></Navigate>}/> */}
-                <Route path='*' element = {<PageTemplate/>}/>
+				<Route path='*' element={<PageTemplate />} />
 			</Routes>
 		</div>
 	);
