@@ -1,7 +1,8 @@
 import { Prisma, PrismaClient } from '@prisma/client';
 import { Request, Response } from 'express';
 import { createHttpError, defaultEndpointsFactory, DependsOnMethod } from 'express-zod-api';
-import { authenticate } from 'middleware/auth'
+import { authenticate, or } from 'middleware/auth'
+import { Domain, Group, hasPermisson, Permission } from 'middleware/auth/permissions';
 import { StringLiteralType } from 'typescript';
 import { z } from 'zod';
 
@@ -49,7 +50,12 @@ async function userEnrolled(prisma: PrismaClient, userId: string, courseId: stri
 export default (prisma: PrismaClient) => {
 
 	const createCourseEndpoint = defaultEndpointsFactory
-		.addMiddleware(authenticate())
+		.addMiddleware(authenticate([
+			or(
+				hasPermisson(Domain.School, Group.Admin, Permission.Manage),
+				hasPermisson(Domain.School, Group.Course, Permission.Manage),
+			)
+		]))
 		.build({
 			method: "post",
 			input: z.object({

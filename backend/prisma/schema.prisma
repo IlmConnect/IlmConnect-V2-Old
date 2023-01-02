@@ -21,6 +21,13 @@ model User {
   courses   CourseMembers[]
 }
 
+// This represents an interval of time that courses repeat in (school year, semester, etc)
+model SchoolSession {
+  id     String   @id @default(uuid())
+  title  String
+  Course Course[]
+}
+
 model Course {
   id          String          @id @default(uuid())
   title       String
@@ -28,6 +35,8 @@ model Course {
   members     CourseMembers[]
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
+  sessionId   String
+  session     SchoolSession   @relation(fields: [sessionId], references: [id])
 }
 
 model CourseMembers {
@@ -43,5 +52,4 @@ model CourseMembers {
 enum Role {
   ADMIN
   TEACHER
-  STUDENT
 }
