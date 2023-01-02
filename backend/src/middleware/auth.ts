@@ -7,7 +7,34 @@ import { z } from 'zod';
 
 type UserWithoutPassword = Omit<User, 'password'>
 
-export const authorize = createMiddleware({
+function authenticateUser(request: Request): UserWithoutPassword {
+	const header = request.headers.authorization?.split(' ')
+
+	if (!header || header.length !== 2) {
+		throw createHttpError(401, 'This is not a valid token')
+	}
+
+	const [_, token] = header
+	return jwt.verify(token, config.auth.jwt.key) as UserWithoutPassword
+}
+
+export type AuthorizationRule = (user: UserWithoutPassword) => boolean
+
+function authorizeUser(
+	user: UserWithoutPassword, 
+	rules?: AuthorizationRule[]
+) {
+	if (!rules) return
+
+	for (const rule of rules) {
+		if (!rule(user))
+			throw createHttpError(403, 'You do not have the correct permissions to access this resource.')
+	}
+}
+
+export const authenticate = (
+	rules?: AuthorizationRule[]
+) => createMiddleware({
 	security: {
 		and: [
 			{ type: 'bearer' }
@@ -15,14 +42,9 @@ export const authorize = createMiddleware({
 	},
 	input: z.object({}),
 	middleware: async ({ request }) => {
-		const header = request.headers.authorization?.split(' ')
+		const user = authenticateUser(request)
 
-		if (!header || header.length !== 2) {
-			throw createHttpError(401, 'This is not a valid token')
-		}
-
-		const [_, token] = header
-		const user = jwt.verify(token, config.auth.jwt.key) as UserWithoutPassword
+		authorizeUser(user, rules)
 
 		return { user }
 	}
