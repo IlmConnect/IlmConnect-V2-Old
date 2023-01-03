@@ -3,38 +3,28 @@ import { styled, useTheme, Theme, CSSObject } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import MuiDrawer from '@mui/material/Drawer';
 import MuiAppBar, { AppBarProps as MuiAppBarProps } from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
 import List from '@mui/material/List';
 import CssBaseline from '@mui/material/CssBaseline';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import IconButton from '@mui/material/IconButton';
-import MenuIcon from '@mui/icons-material/Menu';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
-import ListItem from '@mui/material/ListItem';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
-import ListItemText from '@mui/material/ListItemText';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import AnnouncementIcon from '@mui/icons-material/Announcement';
 import GroupIcon from '@mui/icons-material/Group';
 import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import TodayIcon from '@mui/icons-material/Today';
 import SettingsIcon from '@mui/icons-material/Settings';
-import { Button, Link, Unstable_Grid2 } from '@mui/material';
+import { Button, Link } from '@mui/material';
 import { observer } from 'mobx-react-lite';
-import authStore from 'store/auth';
-import { useNavigate } from 'react-router-dom';
 import Breadcrumbs from '@mui/material/Breadcrumbs';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Unstable_Grid2';
 import Card from '@mui/material/Card';
 import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
-import { maxWidth } from '@mui/system';
 import Stack from '@mui/material/Stack';
-import ToolBarComponent from 'components/ToolBar/ToolBarComponent';
 import MiniDrawerItem from './MiniDrawerItem';
 
 const drawerWidth = 240;
@@ -83,7 +73,7 @@ const bull = (
   </Box>
 );
 
-export const DrawerHeader = styled('div')(({ theme }) => ({
+const DrawerHeader = styled('div')(({ theme }) => ({
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'flex-end',
@@ -132,8 +122,15 @@ const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' 
 );
 
 function MiniDrawer(props) {
-  const navigate = useNavigate()
   const theme = useTheme();
+
+  const navigationItemsList = [{ text: 'Dashboard', icon: <DashboardIcon />, route: '/dashboard', child: [{text: 'DashboardChild', icon: <DashboardIcon />, route: '/dashboard', child: []}] },
+  { text: 'Announcement', icon: <AnnouncementIcon />, route: '/announcement', child: [] },
+  { text: 'Users', icon: <GroupIcon />, route: '/users', child: [] },
+  { text: 'Programs', icon: <LibraryBooksIcon />, route: '/programs', child: [] },
+  { text: 'My Bookings', icon: <TodayIcon />, route: '/bookings', child: [] },
+  { text: 'Settings', icon: <SettingsIcon />, route: '/settings', child: [] }
+]
 
   return (
     <Box sx={{ display: 'flex' }}>
@@ -147,14 +144,8 @@ function MiniDrawer(props) {
         </DrawerHeader>
         <Divider />
         <List>
-          {[{ text: 'Dashboard', icon: <DashboardIcon />, child: [{text: 'DashboardChild', icon: <DashboardIcon />, child: []}] },
-            { text: 'Announcement', icon: <AnnouncementIcon />, child: [] },
-            { text: 'Users', icon: <GroupIcon />, child: [] },
-            { text: 'Programs', icon: <LibraryBooksIcon />, child: [] },
-            { text: 'My Bookings', icon: <TodayIcon />, child: [] },
-            { text: 'Settings', icon: <SettingsIcon />, child: [] }
-          ].map((sidebarItem) => (
-            <MiniDrawerItem sidebarItem={sidebarItem} isOpen={props.isOpen}/>
+          {navigationItemsList.map((sidebarItem) => (
+            <MiniDrawerItem key={sidebarItem.text} sidebarItem={sidebarItem} isOpen={props.isOpen}/>
           ))}
         </List>
       </Drawer>

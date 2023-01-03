@@ -1,8 +1,7 @@
-import { Box, Grid, Typography } from "@mui/material";
-import MiniDrawer, { DrawerHeader } from "components/MiniDrawer/MiniDrawer";
 import { observer } from "mobx-react-lite";
+import PageTemplate from "templates/PageTemplate";
 
 function Dashboard() {
-  return <MiniDrawer />;
+  return (<PageTemplate/>);
 }
 export default observer(Dashboard);
