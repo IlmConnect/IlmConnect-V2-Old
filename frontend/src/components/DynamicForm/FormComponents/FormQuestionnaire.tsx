@@ -1,4 +1,4 @@
-import styled from '@emotion/styled';
+import styled from '@emotion/styled'
 import {
 	Radio, RadioGroup,
 	Button,
@@ -7,26 +7,26 @@ import {
 	Typography,
 	Divider,
 	InputAdornment 
-} from '@mui/material';
-import { Stack } from '@mui/system';
-import { Dispatch, SetStateAction } from 'react';
+} from '@mui/material'
+import { Stack } from '@mui/system'
+import { Dispatch, SetStateAction } from 'react'
 
 const TypographyStyling = styled(Typography)`
-  margin-left: 10%;
-`;
+	margin-left: 10%;
+`
 const TypographyFieldNameStyling = styled(Typography)`
-  margin-left: 10%;
-`;
+	margin-left: 10%;
+`
 
 const ButtonContainer = styled.div`
-  display: flex;
-  justify-content: center;
-  margin-top: 50px;
-`;
+	display: flex;
+	justify-content: center;
+	margin-top: 50px;
+`
 
 const FormControlLabelContainer = styled.div`
-  margin-left: 10%;
-`;
+	margin-left: 10%;
+`
 
 
 interface props{
@@ -40,20 +40,17 @@ export const FormQuestionnaire = ({fieldName, fieldValues, fieldState, setFieldS
 
 
 	const addFieldValue = () => {
-		fieldValues.push('');
-		setFieldState({...fieldState});
-	};
+		fieldValues.push('')
+		setFieldState({...fieldState})
+	}
 
 	return (
 		<>
 			<Stack spacing={2}>
 				<TypographyStyling variant="overline" display="block">Questionnaire Values</TypographyStyling>
-				<Divider />
       
 				<FormControl>
-					
-					<TypographyFieldNameStyling variant="h6">{fieldName}</TypographyFieldNameStyling>
-					
+					<TypographyFieldNameStyling variant="caption" fontSize={25}>{fieldName}</TypographyFieldNameStyling>
 					<RadioGroup
 						aria-labelledby="radio-button-label"
 						defaultValue="empty"
@@ -92,5 +89,5 @@ export const FormQuestionnaire = ({fieldName, fieldValues, fieldState, setFieldS
 				</ButtonContainer>
 			</Stack>
 		</>
-	);
-};
+	)
+}
