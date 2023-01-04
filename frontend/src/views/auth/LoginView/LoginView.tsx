@@ -89,7 +89,7 @@ function LogInView() {
 						color="inherit"
 						size={24}
 					/>: 
-					'Sign Up' 
+					'Sign In' 
 				}
 			</Button>
 

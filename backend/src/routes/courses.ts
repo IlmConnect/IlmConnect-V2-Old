@@ -20,7 +20,8 @@ const CourseMembersModel = z.object({
 const CourseModel = z.object({
 	id: z.string(),
 	title: z.string(),
-	description: z.string().nullable(),
+	subtitle: z.string(),
+	description: z.string(),
 	createdAt: z.date(),
 	updatedAt: z.date(),
 })
@@ -60,12 +61,14 @@ export default (prisma: PrismaClient) => {
 			method: "post",
 			input: z.object({
 				title: z.string(),
-				description: z.string().optional(),
+				subtitle: z.string(),
+				description: z.string(),
 			}),
 			output: CourseModel,
 			handler: async ({ 
 				input: {
 					title,
+					subtitle,
 					description,
 				},
 				options
@@ -75,6 +78,7 @@ export default (prisma: PrismaClient) => {
 				return await prisma.course.create({
 					data: {
 						title,
+						subtitle,
 						description,
 					}
 				})
@@ -103,7 +107,7 @@ export default (prisma: PrismaClient) => {
 		},
 	})
 
-	const findCoursesEndpoint = defaultEndpointsFactory.build({
+	const getAllCoursesEndpoint = defaultEndpointsFactory.build({
 		method: "get",
 		input: z.object({}),
 		output: z.object({
@@ -166,16 +170,18 @@ export default (prisma: PrismaClient) => {
 		input: z.object({
 			id: z.string(),
 			title: z.string(),
-			description: z.string().optional()
+			subtitle: z.string(),
+			description: z.string()
 		}),
 		output: CourseModel,
-		handler: async ({ input: {id, title, description} }) => {
+		handler: async ({ input: {id, title, subtitle, description} }) => {
 			const course = await prisma.course.update({
 				where: {
 					id: id
 				},
 				data:{
 					title: title,
+					subtitle: subtitle,
 					description: description
 				}
 			})
@@ -233,7 +239,7 @@ export default (prisma: PrismaClient) => {
 	return {
 		courses: {
 			'': new DependsOnMethod({
-				get: findCoursesEndpoint,
+				get: getAllCoursesEndpoint,
 				post: createCourseEndpoint
 			}),
 
