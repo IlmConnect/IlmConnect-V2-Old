@@ -35,10 +35,7 @@ const closedMixin = (theme: Theme): CSSObject => ({
     duration: theme.transitions.duration.leavingScreen,
   }),
   overflowX: 'hidden',
-  width: `calc(${theme.spacing(7)} + 1px)`,
-  [theme.breakpoints.up('sm')]: {
-    width: `calc(${theme.spacing(8)} + 1px)`,
-  },
+  width: 0
 });
 
 export const DrawerHeader = styled('div')(({ theme }) => ({
@@ -105,7 +102,6 @@ function MiniDrawer(props) {
       <CssBaseline />
       <Drawer variant="permanent" open={props.isOpen}>
         <DrawerHeader>
-          {/* <h1>Something</h1> */}
           <IconButton onClick={props.handleDrawerOpenToggle}>
             {theme.direction === 'rtl' ? <ChevronRightIcon /> : <ChevronLeftIcon />}
           </IconButton>
