@@ -3,7 +3,7 @@ import { PrismaClient } from '@prisma/client';
 import courseRoutes from './routes/courses';
 import authRoutes from './routes/auth';
 import cors from 'cors';
-import { createConfig, createServer } from 'express-zod-api'
+import { createConfig, createServer, defaultEndpointsFactory } from 'express-zod-api'
 import routes from './routes'
 
 const prisma = new PrismaClient();

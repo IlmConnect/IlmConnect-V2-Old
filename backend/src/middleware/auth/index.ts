@@ -1,11 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
-import config from '../config';
+import config from '../../config';
 import jwt from 'jsonwebtoken';
 import { User } from '@prisma/client';
 import { createHttpError, createMiddleware } from 'express-zod-api';
 import { z } from 'zod';
 
-type UserWithoutPassword = Omit<User, 'password'>
+export type UserWithoutPassword = Omit<User, 'password'>
 
 function authenticateUser(request: Request): UserWithoutPassword {
 	const header = request.headers.authorization?.split(' ')
@@ -18,16 +18,22 @@ function authenticateUser(request: Request): UserWithoutPassword {
 	return jwt.verify(token, config.auth.jwt.key) as UserWithoutPassword
 }
 
-export type AuthorizationRule = (user: UserWithoutPassword) => boolean
+interface AuthorizationRuleParams {
+	user: UserWithoutPassword
+	request: Request
+}
+
+export type AuthorizationRule = (params: AuthorizationRuleParams) => Promise<boolean>
 
 function authorizeUser(
 	user: UserWithoutPassword, 
+	request: Request,
 	rules?: AuthorizationRule[]
 ) {
 	if (!rules) return
 
 	for (const rule of rules) {
-		if (!rule(user))
+		if (!rule({ user, request }))
 			throw createHttpError(403, 'You do not have the correct permissions to access this resource.')
 	}
 }
@@ -44,8 +50,10 @@ export const authenticate = (
 	middleware: async ({ request }) => {
 		const user = authenticateUser(request)
 
-		authorizeUser(user, rules)
+		authorizeUser(user,request, rules)
 
 		return { user }
 	}
 })
+
+export const or = (r1: AuthorizationRule, r2: AuthorizationRule) => (params: AuthorizationRuleParams) => r1(params) || r2(params)
