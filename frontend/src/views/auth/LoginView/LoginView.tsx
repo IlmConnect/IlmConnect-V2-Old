@@ -22,7 +22,7 @@ function LogInView() {
 		try {
 			setLoading(true);
 			const res = await axios.post(config.backend.url + 'login', data)
-			authStore.setUser(res.data?.user, res.data?.token)
+			authStore.setUser(res.data?.data.user, res.data?.data.token)
 			navigate('/');
 		}
 		catch (e: any) {

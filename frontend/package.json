@@ -18,11 +18,13 @@
     "@tinymce/tinymce-react": "^4.2.0",
     "axios": "^1.2.0",
     "font-awesome": "^4.7.0",
+    "html-react-parser": "^3.0.6",
     "mobx": "^6.7.0",
     "mobx-react-lite": "^3.4.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.41.2",
+    "react-lorem-ipsum": "^1.4.10",
     "react-router-dom": "^6.4.3",
     "styled-components": "^5.3.6"
   },

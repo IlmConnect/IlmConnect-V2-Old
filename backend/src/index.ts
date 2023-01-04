@@ -1,7 +1,3 @@
-import express, { Express, Request, Response } from 'express';
-import courseRoutes from './routes/courses';
-import authRoutes from './routes/auth';
-import cors from 'cors';
 import { createConfig, createServer, defaultEndpointsFactory } from 'express-zod-api'
 import routes from './routes'
 
@@ -9,7 +5,11 @@ const config = createConfig({
 	server: {
 		listen: 8000,
 	},
-	cors: true,
+	cors: ({ defaultHeaders, request, endpoint, logger }) => ({
+		...defaultHeaders,
+		"Access-Control-Max-Age": "5000",
+		"Access-Control-Allow-Headers" : "*"
+	}),
 	logger: {
 		level: 'debug',
 		color: true,

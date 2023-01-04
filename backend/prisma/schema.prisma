@@ -31,11 +31,12 @@ model SchoolSession {
 model Course {
   id          String          @id @default(uuid())
   title       String
-  description String?
+  subtitle    String          @default("")
+  description String          
   members     CourseMembers[]
   createdAt   DateTime        @default(now())
   updatedAt   DateTime        @updatedAt
-  sessionId   String
+  sessionId   String          @default("")
   session     SchoolSession   @relation(fields: [sessionId], references: [id])
 }
 

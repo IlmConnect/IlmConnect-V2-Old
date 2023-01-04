@@ -11,6 +11,7 @@ interface Props {
 	value?: string
 	onChange?: (v: string | undefined) => void
 	disabled?: boolean
+	hideAllBars?: boolean
 }
 
 // TODO: make editor disableable
@@ -20,6 +21,7 @@ const HtmlEditor: React.FC<Props> = forwardRef<any, Props>((
 		value,
 		onChange,
 		disabled,
+		hideAllBars
 	}, ref
 ) => {
 	return (
@@ -28,6 +30,9 @@ const HtmlEditor: React.FC<Props> = forwardRef<any, Props>((
 			apiKey='c129a7e4fvrker1hh3wu3erff44558xt0konh62uqh3ew45x'
 			init={{
 				height: 400,
+				toolbar: !hideAllBars,
+				menubar: !hideAllBars,
+				statusbar: !hideAllBars
 			}}
 			initialValue={value}
 			onEditorChange={(value, editor) => onChange?.(value)}
