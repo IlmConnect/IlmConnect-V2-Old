@@ -73,6 +73,11 @@ export default (prisma: PrismaClient) => {
 					data: {
 						title,
 						description,
+						session: {
+							create: {
+								title: 'For testing'
+							}
+						}
 					}
 				})
 			},
