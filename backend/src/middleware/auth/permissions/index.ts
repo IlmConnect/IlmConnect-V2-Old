@@ -34,7 +34,7 @@ const ROLES = {
 	}
 }
 
-type PermissionSet = { [k: Group]: Permission[] }
+type PermissionSet = { [k in Group]: Permission[] }
 
 const PERMISSION_HIERARCHY: PermissionSet = {
 	[Group.Admin]:					[Permission.Manage],
