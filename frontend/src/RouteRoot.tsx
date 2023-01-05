@@ -6,13 +6,15 @@ import SignUpView from './views/auth/SignUpView/SignUpView';
 import LogInView from './views/auth/LoginView/LoginView';
 import Dashboard from 'views/Dashboard/Dashboard';
 import CreateCourseView from 'views/course/Create/CreateCourseView';
-import PageTemplate from 'components/PageTemplate/PageTemplate';
+import PageTemplate from 'templates/PageTemplate';
 
 export default function RouteRoot() {
 	return (
 		<div>
 			<Routes>
-				<Route 
+				<Route path='/course-creation' element = {<CreateCourse/>}/>
+                <Route element={<PageTemplate/>}>
+                <Route 
 					path='/signup' 
 					element={<SignUpView />}
 				/>
@@ -29,15 +31,9 @@ export default function RouteRoot() {
 				<Route 
 					element={<DrawerLayout />}
 				>
-                    
-				</Route>
-
-				<Route path='/tab1' element = {<Page pageName='tab1'></Page>}/>
-				<Route path='/tab2' element = {<Page pageName='tab2'></Page>}/>
-				<Route path='/tab3' element = {<Page pageName='tab3'></Page>}/>
-				<Route path='/course-creation' element = {<CreateCourse/>}/>
-				{/* <Route path='*'element = {<Navigate to='/tab1' replace></Navigate>}/> */}
-                <Route path='*' element = {<PageTemplate/>}/>
+                    </Route>
+                    <Route path='*' element={<Dashboard/>}/>
+                </Route>
 			</Routes>
 		</div>
 	);
