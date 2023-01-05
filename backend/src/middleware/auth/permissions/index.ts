@@ -41,18 +41,18 @@ type PermissionsSet = {
 
 // Turns the permissions list above into a object with the structure: domain => permission => action
 // Allows you to pass something like 'permissions.school.course.view' into the hasPermission function
-export const permissions: PermissionsSet = Object.fromEntries(
+export const permissions = Object.fromEntries(
 	domains.map(domain => [
 		domain,
 		Object.fromEntries(
 			PERMISSIONS_LIST.map((permission) => [
-				permission,
+				permission.key as PermissionKey,
 				Object.fromEntries(
 					permission.actions.map(action => [
 						action,
 						{
 							domain,
-							permission,
+							permission: permission.key,
 							action
 						}
 					])
