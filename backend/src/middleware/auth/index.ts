@@ -25,7 +25,7 @@ interface AuthorizationRuleParams {
 
 export type AuthorizationRule = (params: AuthorizationRuleParams) => Promise<boolean>
 
-function authorizeUser(
+async function authorizeUser(
 	user: UserWithoutPassword, 
 	request: Request,
 	rules?: AuthorizationRule[]
@@ -33,7 +33,7 @@ function authorizeUser(
 	if (!rules) return
 
 	for (const rule of rules) {
-		if (!rule({ user, request }))
+		if (!await rule({ user, request }))
 			throw createHttpError(403, 'You do not have the correct permissions to access this resource.')
 	}
 }
@@ -50,7 +50,7 @@ export const authenticate = (
 	middleware: async ({ request }) => {
 		const user = authenticateUser(request)
 
-		authorizeUser(user,request, rules)
+		await authorizeUser(user,request, rules)
 
 		return { user }
 	}

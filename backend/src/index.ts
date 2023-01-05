@@ -1,12 +1,11 @@
 import express, { Express, Request, Response } from 'express';
-import { PrismaClient } from '@prisma/client';
 import courseRoutes from './routes/courses';
 import authRoutes from './routes/auth';
 import cors from 'cors';
 import { createConfig, createServer, defaultEndpointsFactory } from 'express-zod-api'
 import routes from './routes'
 
-const prisma = new PrismaClient();
+
 
 const config = createConfig({
 	server: {
@@ -22,7 +21,7 @@ const config = createConfig({
 
 createServer(
 	config,
-	routes(prisma)
+	routes,
 )
 
 

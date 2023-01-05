@@ -5,6 +5,7 @@ import bcrypt, { hash } from 'bcrypt';
 import { Prisma, PrismaClient, User } from '@prisma/client';
 import { createHttpError, defaultEndpointsFactory, Routing, EndpointsFactory } from "express-zod-api";
 import { z } from 'zod'
+import { client } from 'libs/db';
 
 
 const UserModel = z.object({
@@ -32,96 +33,94 @@ async function getUser(prisma: PrismaClient, email: string) {
 	}
 }
 
-export default (prisma: PrismaClient) => {
-	const signupEndpoint = defaultEndpointsFactory.build({
-		method: "post",
-		input: z.object({
-			email: z.string().email(),
-			password: z.string().min(8).regex(
-				/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])/,
-				{ message: 'Password must contain one uppercase letter, one lowercase letter, and one special character(#?!@$%^&*-)' }
-			),
-		}),
-		output: z.object({
-			user: UserModel,
-			token: z.string(),
-		}),
-		handler: async ({ 
-			input: {
-				email,
-				password,
-			}
-		}) => {
-			const existingUser = await getUser(prisma, email);
+const signupEndpoint = defaultEndpointsFactory.build({
+	method: "post",
+	input: z.object({
+		email: z.string().email(),
+		password: z.string().min(8).regex(
+			/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-])/,
+			{ message: 'Password must contain one uppercase letter, one lowercase letter, and one special character(#?!@$%^&*-)' }
+		),
+	}),
+	output: z.object({
+		user: UserModel,
+		token: z.string(),
+	}),
+	handler: async ({ 
+		input: {
+			email,
+			password,
+		}
+	}) => {
+		const existingUser = await getUser(client, email);
 
-			if (existingUser) {
-				throw createHttpError(400, 'This user already exists')
-			}
+		if (existingUser) {
+			throw createHttpError(400, 'This user already exists')
+		}
 
-			const newUser: Prisma.UserCreateInput = {
-				firstName: '',
-				lastName: '',
-				email,
-				password: await hash(password, 12),
-			};
-			
-			const user = await prisma.user.create({ data: newUser });
+		const newUser: Prisma.UserCreateInput = {
+			firstName: '',
+			lastName: '',
+			email,
+			password: await hash(password, 12),
+		};
+		
+		const user = await client.user.create({ data: newUser });
 
-			const token = createUserJWT(user);
-			
-			return {
-				user: { 
-					...user, 
-					password: undefined,
-					role: undefined,
-				},
-				token,
-			}
-		},
-	})
+		const token = createUserJWT(user);
+		
+		return {
+			user: { 
+				...user, 
+				password: undefined,
+				role: undefined,
+			},
+			token,
+		}
+	},
+})
 
-	const loginEndpoint = defaultEndpointsFactory.build({
-		method: "post",
-		input: z.object({
-			email: z.string().email(),
-			password: z.string(),
-		}),
-		output: z.object({
-			user: UserModel,
-			token: z.string(),
-		}),
-		handler: async ({ 
-			input: {
-				email,
-				password,
-			}
-		}) => {
-			const user = await getUser(prisma, email);
+const loginEndpoint = defaultEndpointsFactory.build({
+	method: "post",
+	input: z.object({
+		email: z.string().email(),
+		password: z.string(),
+	}),
+	output: z.object({
+		user: UserModel,
+		token: z.string(),
+	}),
+	handler: async ({ 
+		input: {
+			email,
+			password,
+		}
+	}) => {
+		const user = await getUser(client, email);
 
-			if (!user) {
-				throw createHttpError(404, 'This user does not exist')
-			}
+		if (!user) {
+			throw createHttpError(404, 'This user does not exist')
+		}
 
-			const token = createUserJWT(user);
+		const token = createUserJWT(user);
 
-			// If invalid password, throw error
-			if (!await bcrypt.compare(password, user.password)) {
-				throw createHttpError(400, 'Invalid password')
-			}
+		// If invalid password, throw error
+		if (!await bcrypt.compare(password, user.password)) {
+			throw createHttpError(400, 'Invalid password')
+		}
 
-			return {
-				user: { 
-					...user, 
-					password: undefined,
-					role: undefined,
-				},
-				token,
-			}
-		},
-	})
+		return {
+			user: { 
+				...user, 
+				password: undefined,
+				role: undefined,
+			},
+			token,
+		}
+	},
+})
 
-	return {
-		login: loginEndpoint,
-		signup: signupEndpoint,
-	}
-};
+export default {
+	login: loginEndpoint,
+	signup: signupEndpoint,
+}
