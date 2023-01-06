@@ -4,6 +4,7 @@ import LogInView from './views/auth/LoginView/LoginView';
 import Dashboard from 'views/Dashboard/Dashboard';
 import CreateCourseView from 'views/course/Create/CreateCourseView';
 import DefaultTemplate from 'templates/DefaultTemplate';
+import CourseListView from 'views/course/List/CourseListView';
 
 export default function RouteRoot() {
 	return (
@@ -22,6 +23,11 @@ export default function RouteRoot() {
 					<Route
 						path='/courses/create'
 						element={<CreateCourseView />}
+					/>
+
+					<Route
+						path='/courses'
+						element={<CourseListView />}
 					/>
 
 					<Route
