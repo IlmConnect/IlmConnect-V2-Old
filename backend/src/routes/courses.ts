@@ -1,22 +1,15 @@
 import { PrismaClient } from '@prisma/client';
-import { Request, Response } from 'express';
 import { createHttpError, defaultEndpointsFactory, DependsOnMethod } from 'express-zod-api';
 import { client } from 'libs/db';
 import { authenticate, or } from 'middleware/auth'
 import { hasPermisson, permissions, useSchoolRole } from 'middleware/auth/permissions';
-import { StringLiteralType } from 'typescript';
 import { z } from 'zod';
 
-const CourseMembersModel = z.object({
-	role: z.string(),
-	courseId: z.string(),
-	userId: z.string()
-})
-
 const CourseModel = z.object({
-	id: z.string(),
+	id: z.string().uuid(),
 	title: z.string(),
-	description: z.string().nullable(),
+	subtitle: z.string(),
+	description: z.string(),
 	createdAt: z.date(),
 	updatedAt: z.date(),
 })
@@ -60,7 +53,7 @@ const createCourseEndpoint = defaultEndpointsFactory
 		method: "post",
 		input: z.object({
 			title: z.string(),
-			description: z.string().optional(),
+			description: z.string(),
 		}),
 		output: CourseModel,
 		handler: async ({ 
@@ -92,7 +85,6 @@ const getCourseEndpoint = defaultEndpointsFactory
 		}),
 		output: CourseModel,
 		handler: async ({ input: {id}}) => {
-			console.log(id)
 			const course = await client.course.findUnique({
 				where: {
 					id: id
@@ -206,7 +198,6 @@ const registerMemberInCourseEndpoint = defaultEndpointsFactory
 		method: "post",
 		input: z.object({
 			id: z.string(),
-
 		}),
 		output: z.object({
 			result: z.boolean()

@@ -9,7 +9,6 @@ export type UserWithoutPassword = Omit<User, 'password'>
 
 function authenticateUser(request: Request): UserWithoutPassword {
 	const header = request.headers.authorization?.split(' ')
-
 	if (!header || header.length !== 2) {
 		throw createHttpError(401, 'This is not a valid token')
 	}

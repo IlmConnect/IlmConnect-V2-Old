@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { makeAutoObservable } from 'mobx';
 
 const USER_KEY = 'user'
@@ -23,14 +24,17 @@ class AuthStore {
 
 		window.localStorage.setItem(USER_KEY, JSON.stringify(user))
 		window.localStorage.setItem(TOKEN_KEY, token)
+		axios.defaults.headers.common.Authorization = `Bearer ${token}`
 	}
 
 	logout() {
 		this.user = undefined
 		this.token = undefined
 		window.location.reload()
+		delete axios.defaults.headers.common.Authorization
 	}
 }
 
 const authStore = new AuthStore();
 export default authStore;
+
