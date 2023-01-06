@@ -18,7 +18,7 @@ module.exports = {
 
 	rules: {
 		indent: ['error', 'tab'],
-		semi: 'error',
+		semi: ['error', 'never'],
 		quotes: ['error', 'single'],
 		'react/react-in-jsx-scope': 'off',
 	},
