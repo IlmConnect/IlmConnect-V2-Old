@@ -24,6 +24,7 @@ class AuthStore {
 
 		window.localStorage.setItem(USER_KEY, JSON.stringify(user))
 		window.localStorage.setItem(TOKEN_KEY, token)
+		axios.defaults.headers.common.Authorization = `Bearer ${token}`
 	}
 
 	logout() {

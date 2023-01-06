@@ -27,7 +27,6 @@ const RegisterHomeView : React.FC = () => {
 		const getCourse = async () => {
 			const course = await courseStore.getCourse(id)
 			setCourse(course)
-			console.log(course)
 		};
 		
 		getCourse();
@@ -51,7 +50,6 @@ const RegisterHomeView : React.FC = () => {
 			setLoading(true);
             const endpointUrl = config.backend.url + 'courses/' + id + "/users"
 			const res = await axios.post(endpointUrl, data)
-			console.log(res.data)
 			//navigate('/');
 		}
 		catch (e: any) {

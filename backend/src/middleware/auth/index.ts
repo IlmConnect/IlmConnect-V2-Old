@@ -9,8 +9,6 @@ export type UserWithoutPassword = Omit<User, 'password'>
 
 function authenticateUser(request: Request): UserWithoutPassword {
 	const header = request.headers.authorization?.split(' ')
-	console.log(header)
-	console.log("ddsfsfsdfsdf")
 	if (!header || header.length !== 2) {
 		throw createHttpError(401, 'This is not a valid token')
 	}
@@ -49,7 +47,6 @@ export const authenticate = (
 	},
 	input: z.object({}),
 	middleware: async ({ request }) => {
-		console.log("auth attempt")
 		const user = authenticateUser(request)
 
 		await authorizeUser(user,request, rules)
