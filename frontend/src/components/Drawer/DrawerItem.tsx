@@ -79,6 +79,7 @@ const DrawerItem: React.FC<Props> = ({
 									<DrawerItem
 										key={i}
 										item={child}
+										onToggle={onToggle}
 									/>
 								))
 							}

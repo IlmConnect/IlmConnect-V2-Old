@@ -13,7 +13,7 @@ class AuthStore {
 		const user = window.localStorage.getItem(USER_KEY)
 		const token = window.localStorage.getItem(TOKEN_KEY)
 		if (user && token) {
-			this.setUser(user, token)
+			this.setUser(JSON.parse(user), token)
 		}
 	}
 
