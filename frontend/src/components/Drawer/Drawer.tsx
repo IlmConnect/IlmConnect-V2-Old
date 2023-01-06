@@ -85,6 +85,7 @@ const Drawer: React.FC<DrawerProps> = ({
 						<DrawerItem
 							key={item.route}
 							item={item}
+							onToggle={onToggle}
 						/>
 					)),
 					<StyledDivider />
