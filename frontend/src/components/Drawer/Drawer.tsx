@@ -104,6 +104,9 @@ const Drawer: React.FC<DrawerProps> = ({
 				variant='temporary'
 				sx={{
 					display: { xs: 'block', sm: 'none' },
+					'& .MuiDrawer-paper': {
+						width: DRAWER_WIDTH,
+					}
 				}}
 				open={open}
 				onClose={onToggle}

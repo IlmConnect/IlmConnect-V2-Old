@@ -8,7 +8,7 @@ import {
 	ListItemText,
 } from "@mui/material";
 import { observer } from "mobx-react-lite";
-import React from "react";
+import React, { SyntheticEvent } from "react";
 import { useNavigate } from "react-router-dom";
 
 export interface NavigationItem {
@@ -20,15 +20,25 @@ export interface NavigationItem {
 
 interface Props {
 	item: NavigationItem
+	onToggle: () => void
 }
 
 const DrawerItem: React.FC<Props> = ({
-	item
+	item,
+	onToggle
 }) => {
 	const [expanded, setExpanded] = React.useState(false);
 	const navigate = useNavigate();
 
-	const toggleExpanded = () => setExpanded(!expanded)
+	const toggleExpanded = (e: SyntheticEvent) => {
+		setExpanded(!expanded)
+		e.stopPropagation()
+	}
+
+	const goToRoute = () => {
+		navigate(item.route)
+		onToggle()
+	}
 
 	return (
 		<ListItem
@@ -37,7 +47,7 @@ const DrawerItem: React.FC<Props> = ({
 		>
 			<>
 				<ListItemButton
-					onClick={() => navigate(item.route)}
+					onClick={goToRoute}
 				>
 					<ListItemIcon>
 						{item.icon}
