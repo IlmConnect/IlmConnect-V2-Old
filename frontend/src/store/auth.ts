@@ -1,7 +1,7 @@
 import { makeAutoObservable } from 'mobx';
 
 const USER_KEY = 'user'
-const TOKEN_KEY = 'user'
+const TOKEN_KEY = 'token'
 
 class AuthStore {
 	user: object | undefined;
