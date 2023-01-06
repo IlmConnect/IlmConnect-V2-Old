@@ -31,7 +31,7 @@ function LogInView() {
 		}
 		finally {
 			setLoading(false)
-		}		
+		}
 	}
 
 	return (
@@ -45,7 +45,7 @@ function LogInView() {
 				Log In
 			</Typography>
 
-			<TextField 
+			<TextField
 				id="email"
 				label="Email"
 				{...register(
@@ -61,7 +61,7 @@ function LogInView() {
 				helperText={errors.email?.message}
 				disabled={loading}
 			/>
-			<TextField 
+			<TextField
 				id="password"
 				label="Password"
 				type="password"
@@ -84,19 +84,19 @@ function LogInView() {
 				onClick={handleSubmit(logIn)}
 				disabled={loading}
 			>
-				{ loading? 
-					<CircularProgress 
+				{loading ?
+					<CircularProgress
 						color="inherit"
 						size={24}
-					/>: 
-					'Sign Up' 
+					/> :
+					'Log In'
 				}
 			</Button>
 
 			<Typography>
 				Don't have an account?&nbsp;
 				<Link to="/signup">
-					Sign UP
+					Sign Up
 				</Link>
 			</Typography>
 		</FullScreenGrid>

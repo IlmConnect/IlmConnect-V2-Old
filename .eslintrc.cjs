@@ -21,6 +21,7 @@ module.exports = {
 		semi: ['error', 'never'],
 		quotes: ['error', 'single'],
 		'react/react-in-jsx-scope': 'off',
+		"react/jsx-max-props-per-line": [true, { "maximum": 1, "when": 'always' }]
 	},
 
 	overrides: [
