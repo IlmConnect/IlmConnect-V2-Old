@@ -1,16 +1,7 @@
-import { Box, Button, CircularProgress, Grid, TextField, Typography, Container } from "@mui/material"
-import axios from "axios"
-import HtmlEditor from "components/HtmlEditor/HtmlEditor"
-import config from "config"
+import { Grid } from "@mui/material"
 import { useEffect, useState } from "react"
-import { useForm } from "react-hook-form"
-import authStore from "store/auth"
-import LoadingSpinner from "ui/LoadingٍSpinner"
-import FullScreenGrid from "views/auth/components/FullScreenGrid/FullScreenGrid"
 import { observer } from 'mobx-react-lite';
-import { useParams } from "react-router-dom"
 import CourseBox from "./components/CourseBox"
-import CourseScreenGrid from "./components/CourseScreenGrid"
 import courseStore from "store/course"
 
 
@@ -21,7 +12,6 @@ const CourseListView : React.FC = () => {
         courseStore.fetch()
     }, []);
 	return (
-
             <Grid 
                 container 
                 spacing={2} 
