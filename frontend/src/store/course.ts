@@ -55,10 +55,10 @@ class CourseStore {
         }
         try{
             if(!this.byId[courseId]){
-                console.log("fetching courses, token:  " + authStore.getToken())
+                console.log("fetching courses, token:  " + authStore.token)
                 const res = await axios.get(config.backend.url + 'courses/' + courseId, 
                         { 
-                            headers: {"Authorization" : `Bearer ${authStore.getToken()}`
+                            headers: {"Authorization" : `Bearer ${authStore.token}`
                         }})
             
                 /* course is stored in a data object within the data object in the http response */
