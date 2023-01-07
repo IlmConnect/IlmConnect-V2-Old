@@ -1,11 +1,11 @@
-import { Box, Button, CardContent, CircularProgress, Grid, styled, TextField, Typography, Unstable_Grid2 } from "@mui/material"
+import { Button, Typography} from "@mui/material"
 import axios from "axios"
 import config from "config"
 import { useEffect, useState } from "react"
 
 import FullScreenGrid from "views/auth/components/FullScreenGrid/FullScreenGrid"
 import { observer } from 'mobx-react-lite';
-import { useLocation, useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import CourseDescriptionView from "./components/CourseDescriptionView"
 import courseStore from "store/course"
 
@@ -22,6 +22,7 @@ const RegisterHomeView : React.FC = () => {
 	const [loading, setLoading] = useState(false)
     let {id} = useParams();
 	const [course, setCourse] = useState<CourseModel | null>(null);
+	const navigate = useNavigate()
 
     useEffect(() => {
 		const getCourse = async () => {
@@ -44,28 +45,23 @@ const RegisterHomeView : React.FC = () => {
             }
 
             const data = {
-                courseId: id
+                id: id
             }
           
 			setLoading(true);
             const endpointUrl = config.backend.url + 'courses/' + id + "/users"
 			const res = await axios.post(endpointUrl, data)
-			//navigate('/');
+			alert("Successfully enrolled in course!")
+			navigate('/courses');
 		}
 		catch (e: any) {
 			const errorMessage = e?.response?.data?.error?.message
-            /* TODO refactor error handling, this could be done better */
-            if(e.message){
-                alert(e.message)
-            } else if (errorMessage){
-                alert(errorMessage)
-            }
+			alert(errorMessage)
+			navigate('/courses');
 		}
 		finally {
 			setLoading(false)          
 		}
-        /* TODO: Force UI to go back to course list view */
-
 	}
 	return (
 
